@@ -18,7 +18,7 @@ const userSchema = new Schema({
   firstName: { type: String },
   lastName: { type: String },
   avatar: { type: String },
-  created_at: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now },
   email: { type: String, require: true, unique: 'This email is already used' }
 });
 
