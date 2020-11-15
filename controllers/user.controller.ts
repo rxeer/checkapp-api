@@ -14,7 +14,7 @@ const login = (req: Request, res: Response) => {
         }
       })
       .catch(() => {
-        throw boom.badData('Email/password pair is not valid');
+        throw boom.notFound('Email or password incorrect');
       })
   );
 };

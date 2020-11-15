@@ -18,12 +18,15 @@ router.route('/login').post(
   userController.login
 );
 
-router.route('/').post(
+router.route('/register').post(
   [
     body('email')
       .isEmail()
+      .exists()
       .withMessage('Email is not valid'),
-    body('password').exists()
+    body('password').exists(),
+    body('firstName').exists(),
+    body('lastName').exists()
   ],
   auth.optional,
   userController.register

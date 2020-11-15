@@ -1,5 +1,5 @@
 {
-  "name": "track-check-api",
+  "name": "checkapp-api",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
@@ -10,7 +10,7 @@
     "start": "tsc && NODE_ENV=production node ./build/server.js"
   },
   "keywords": [
-    "track-check"
+    "checkapp-api"
   ],
   "engines": {
     "node": "10.x"
