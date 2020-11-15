@@ -48,6 +48,10 @@ if (config.has('port')) {
   });
 }
 
+app.listen((process.env.PORT || 5000), function(){
+  console.log('listening on *:5000');
+});
+
 function wrapAsync(fn: Function) {
   return function(req: Request, res: Response, next: Function) {
     fn(req, res, next).catch(next);
