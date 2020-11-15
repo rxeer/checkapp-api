@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development nodemon",
     "stop-prod-server": "pm2 stop all",
     "tsc": "tsc",
-    "start": "tsc && NODE_ENV=production node ./build/server.js"
+    "start": "NODE_ENV=production node ./build/server.js"
   },
   "keywords": [
     "checkapp-api"
