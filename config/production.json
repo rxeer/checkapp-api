@@ -1,0 +1,14 @@
+{
+  "port": 3003,
+  "database": {
+    "config": {
+      "host": "mongodb://admin:lKhhBN3EsA5vUKv3@cluster0-shard-00-00-jg5mh.azure.mongodb.net:27017,cluster0-shard-00-01-jg5mh.azure.mongodb.net:27017,cluster0-shard-00-02-jg5mh.azure.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"
+    }
+  },
+  "auth": {
+    "hash": "sha512",
+    "secret": "693F197D312F1A9AF83396E2F98292F65BF221F2950B1F3AC5DEB852C756625B",
+    "alg": "HS256"
+  },
+  "avatar": "https://image.flaticon.com/icons/svg/2725/2725999.svg"
+}

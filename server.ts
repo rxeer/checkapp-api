@@ -1,4 +1,4 @@
-import './moduleAlias.ts';
+import './moduleAlias';
 
 import boom from 'boom';
 import config from 'config';
