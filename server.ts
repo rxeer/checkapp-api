@@ -43,9 +43,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 if (config.has('port')) {
   const appPort: string = config.get('port');
 
-  app.listen(appPort);
-} else {
-  app.listen(process.env.PORT || 5000);
+  app.listen(process.env.PORT || appPort);
 }
 
 function wrapAsync(fn: any) {
