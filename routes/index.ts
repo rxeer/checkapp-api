@@ -3,12 +3,17 @@ import userRoutes from './user';
 import uploadRoutes from './upload';
 import incomesRoutes from './incomes';
 import productsRoutes from './products';
-import categoriesRoutes from './categories';
+import userCategoriesRoutes from './user-categories';
 
 const router = express.Router();
 
 router.use('/upload', uploadRoutes);
-router.use('/categories', categoriesRoutes);
-router.use('/users', userRoutes, productsRoutes, incomesRoutes);
+router.use(
+  '/users',
+  userRoutes,
+  productsRoutes,
+  incomesRoutes,
+  userCategoriesRoutes
+);
 
 export default router;
