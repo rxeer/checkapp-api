@@ -5,8 +5,15 @@ import config from 'config';
 import passport from 'passport';
 import bodyParser from 'body-parser';
 import express, { Request, Response, Application, NextFunction } from 'express';
+import swaggerUi from 'swagger-ui-express';
+//  @ts-ignore
+import swaggerDocument from './swagger.json';
 
 import router from './routes';
+
+router.use('/api-docs', swaggerUi.serve);
+router.get('/api-docs', swaggerUi.setup(swaggerDocument));
+
 import {
   configureCors,
   configureLogger,

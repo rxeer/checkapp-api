@@ -2,12 +2,8 @@ import boom from 'boom';
 import { Request, Response } from 'express';
 import IncomeStatisticsModel from '@/models/IncomeStatistics';
 
-import {
-  IncomeStatisticInterface,
-  IncomeInterface,
-  IncomeStatisticDto,
-} from '@/@types/models';
-
+import { IncomeStatisticDto, IncomeStatisticInterface } from '@/@types/models';
+import { IncomeInterface } from '@/@types/models/Incomes';
 const get = (req: Request, res: Response) => {
   return IncomeStatisticsModel.find()
     .exec()
@@ -20,7 +16,7 @@ const get = (req: Request, res: Response) => {
     });
 };
 
-const update = ({ price, date }: IncomeInterface) => {
+const update = ({ income, date }: IncomeInterface) => {
   return IncomeStatisticsModel.find().then(
     (statistics: IncomeStatisticInterface[]) => {
       const currentStatistics: IncomeStatisticInterface =
@@ -29,7 +25,7 @@ const update = ({ price, date }: IncomeInterface) => {
       const labels: Date[] = currentStatistics.labels || [];
 
       labels.push(date);
-      data.push(price);
+      data.push(income);
 
       return IncomeStatisticsModel.create({ data, labels }).catch((err) => {
         throw boom.notFound(err);

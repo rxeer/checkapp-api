@@ -1,23 +1,31 @@
 import { Document } from 'mongoose';
+import { IGetUserAuthInfoRequest } from './General';
 
 export interface IncomeInterface extends Document {
   date: Date;
-  name: string;
-  price: number;
+  income: number;
+  userId: string;
   description: string;
 }
 
+export interface IIncomesRequest extends IGetUserAuthInfoRequest {
+  params: {
+    userId: string;
+    incomeId: string;
+  };
+}
+
 export class IncomeDto {
-  public name: string = '';
-  public price: number = 0;
+  public income: number = 0;
+  public userId: string = '';
   public date: Date = new Date();
   public description: string = '';
 
   constructor(data?: IncomeDto) {
     if (data) {
-      this.name = data.name;
       this.date = data.date;
-      this.price = data.price;
+      this.income = data.income;
+      this.userId = data.userId;
       this.description = data.description;
     }
   }
