@@ -6,7 +6,7 @@ const authSecret: string = config.get('auth.secret');
 
 const getTokenFromHeaders = (req: Request) => {
   const {
-    headers: { authorization }
+    headers: { authorization },
   } = req;
 
   if (authorization && authorization.split(' ')[0] === 'Bearer') {
@@ -20,14 +20,14 @@ const auth = {
   required: jwt({
     secret: authSecret,
     userProperty: 'payload',
-    getToken: getTokenFromHeaders
+    getToken: getTokenFromHeaders,
   }),
   optional: jwt({
     secret: authSecret,
     userProperty: 'payload',
     getToken: getTokenFromHeaders,
-    credentialsRequired: false
-  })
+    credentialsRequired: false,
+  }),
 };
 
 export default auth;

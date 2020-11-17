@@ -50,5 +50,5 @@ exports.default = {
     get: get,
     create: create,
     remove: remove,
-    update: update
+    update: update,
 };

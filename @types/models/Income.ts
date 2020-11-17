@@ -1,10 +1,10 @@
 import { Document } from 'mongoose';
 
 export interface IncomeInterface extends Document {
-	date: Date,
-	name: string,
-	price: number,
-	description: string,
+  date: Date;
+  name: string;
+  price: number;
+  description: string;
 }
 
 export class IncomeDto {
@@ -16,7 +16,7 @@ export class IncomeDto {
   constructor(data?: IncomeDto) {
     if (data) {
       this.name = data.name;
-			this.date = data.date;
+      this.date = data.date;
       this.price = data.price;
       this.description = data.description;
     }

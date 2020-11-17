@@ -13,7 +13,7 @@ var Schema = mongoose_1.default.Schema;
 var userSchema = new Schema({
     role: {
         type: String,
-        default: 'USER'
+        default: 'USER',
     },
     hash: String,
     salt: String,
@@ -21,7 +21,7 @@ var userSchema = new Schema({
     lastName: { type: String },
     avatar: { type: String },
     createdAt: { type: Date, default: Date.now },
-    email: { type: String, require: true, unique: 'This email is already used' }
+    email: { type: String, require: true, unique: 'This email is already used' },
 });
 userSchema.methods = {
     setPassword: function (password) {
@@ -51,17 +51,17 @@ userSchema.methods = {
             return jsonwebtoken_1.default.sign({
                 email: this.email,
                 id: this._id,
-                exp: expirationDate.getTime() / 1000
+                exp: expirationDate.getTime() / 1000,
             }, authSecret);
         }
     },
     toAuthJSON: function () {
         var refreshToken = rand_token_1.default.uid(256);
         return {
-            token: this.generateJWT(),
-            refreshToken: refreshToken
+            accessToken: this.generateJWT(),
+            refreshToken: refreshToken,
         };
-    }
+    },
 };
 userSchema.statics = {
     getById: function (_id) {
@@ -69,7 +69,7 @@ userSchema.statics = {
             .select({ password: 0 })
             .exec()
             .then(function (user) { return user; });
-    }
+    },
 };
 userSchema.plugin(mongoose_unique_validator_1.default);
 exports.default = mongoose_1.default.model('User', userSchema);

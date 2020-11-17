@@ -30,5 +30,5 @@ var update = function (_a) {
 };
 exports.default = {
     get: get,
-    update: update
+    update: update,
 };

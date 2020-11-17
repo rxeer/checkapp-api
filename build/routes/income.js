@@ -11,12 +11,7 @@ var income_statistics_controller_1 = __importDefault(require("@/controllers/inco
 var router = express_promise_router_1.default();
 router
     .route('/')
-    .post([
-    check_1.body('price').exists(),
-    check_1.body('name')
-        .isString()
-        .exists()
-], auth_1.default.required, income_controller_1.default.create)
+    .post([check_1.body('price').exists(), check_1.body('name').isString().exists()], auth_1.default.required, income_controller_1.default.create)
     .get(auth_1.default.required, income_controller_1.default.get);
 router
     .route('/:incomeId')

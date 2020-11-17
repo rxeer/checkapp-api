@@ -17,13 +17,13 @@ var auth = {
     required: express_jwt_1.default({
         secret: authSecret,
         userProperty: 'payload',
-        getToken: getTokenFromHeaders
+        getToken: getTokenFromHeaders,
     }),
     optional: express_jwt_1.default({
         secret: authSecret,
         userProperty: 'payload',
         getToken: getTokenFromHeaders,
-        credentialsRequired: false
-    })
+        credentialsRequired: false,
+    }),
 };
 exports.default = auth;

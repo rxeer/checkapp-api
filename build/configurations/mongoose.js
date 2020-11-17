@@ -23,7 +23,6 @@ exports.configureConnection = function (options) {
         mongoose_1.default.Promise = Promise;
         mongoose_1.default.set('useCreateIndex', true);
         mongoose_1.default.set('useFindAndModify', false);
-        //@ts-ignore
         mongoose_1.default.connect(dbHost, __assign({ useNewUrlParser: true, useUnifiedTopology: true }, options));
     }
 };

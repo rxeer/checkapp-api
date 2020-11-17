@@ -1,9 +1,12 @@
 import cors from 'cors';
 import express from 'express';
 
-export const configureCors = (app: express.Application, options?: any) => {
+export const configureCors = (
+  app: express.Application,
+  options?: any
+): void => {
   app.use(cors(options));
-  app.use(function(req, res, next) {
+  app.use((req, res, next): void => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Credentials', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');

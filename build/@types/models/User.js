@@ -6,19 +6,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var config_1 = __importDefault(require("config"));
 var UserDto = /** @class */ (function () {
     function UserDto(data) {
+        this.id = '';
         this.role = '';
         this.avatar = '';
         this.email = '';
         this.firstName = '';
         this.lastName = '';
-        this.created_at = '';
+        this.createdAt = '';
         if (data) {
+            this.id = data.id;
             this.role = data.role;
             this.email = data.email;
             this.avatar = data.avatar || config_1.default.get('avatar');
             this.lastName = data.lastName || '';
             this.firstName = data.firstName || '';
-            this.created_at = data.created_at;
+            this.createdAt = data.createdAt;
         }
     }
     return UserDto;

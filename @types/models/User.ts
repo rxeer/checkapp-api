@@ -8,29 +8,34 @@ export interface UserInterface extends Document {
   firstName: string;
   lastName: string;
   created_at: string;
-  generateJWT: Function;
-  toAuthJSON: Function;
+  generateJWT: () => string;
+  toAuthJSON: () => {
+    accessToken: string;
+    refreshToken: string;
+  };
   setPassword: (password: string) => void;
   getById: (id: string) => UserInterface | null;
   validatePassword: (password: string) => boolean;
 }
 
 export class UserDto {
+  public id: string = '';
   public role: string = '';
   public avatar: string = '';
   public email: string = '';
   public firstName: string = '';
   public lastName: string = '';
-  public created_at: string = '';
+  public createdAt: string = '';
 
   constructor(data?: UserDto) {
     if (data) {
+      this.id = data.id;
       this.role = data.role;
       this.email = data.email;
       this.avatar = data.avatar || config.get('avatar');
       this.lastName = data.lastName || '';
       this.firstName = data.firstName || '';
-      this.created_at = data.created_at;
+      this.createdAt = data.createdAt;
     }
   }
 }

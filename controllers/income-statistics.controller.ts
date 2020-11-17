@@ -5,7 +5,7 @@ import IncomeStatisticsModel from '@/models/IncomeStatistics';
 import {
   IncomeStatisticInterface,
   IncomeInterface,
-  IncomeStatisticDto
+  IncomeStatisticDto,
 } from '@/@types/models';
 
 const get = (req: Request, res: Response) => {
@@ -23,14 +23,15 @@ const get = (req: Request, res: Response) => {
 const update = ({ price, date }: IncomeInterface) => {
   return IncomeStatisticsModel.find().then(
     (statistics: IncomeStatisticInterface[]) => {
-      const currentStatistics: IncomeStatisticInterface = statistics[statistics.length - 1] || {};
+      const currentStatistics: IncomeStatisticInterface =
+        statistics[statistics.length - 1] || {};
       const data: number[] = currentStatistics.data || [];
       const labels: Date[] = currentStatistics.labels || [];
 
       labels.push(date);
       data.push(price);
 
-      return IncomeStatisticsModel.create({ data, labels }).catch(err => {
+      return IncomeStatisticsModel.create({ data, labels }).catch((err) => {
         throw boom.notFound(err);
       });
     }
@@ -39,5 +40,5 @@ const update = ({ price, date }: IncomeInterface) => {
 
 export default {
   get,
-  update
+  update,
 };

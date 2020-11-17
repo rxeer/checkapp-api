@@ -1,29 +1,28 @@
 import boom from 'boom';
 import { Request, Response } from 'express';
 
-import IncomeModel from '@/models/Income';
-import { IncomeInterface, IncomeDto } from '@/@types/models';
-import incomeStatisticsController from '@/controllers/income-statistics.controller';
+import CategoryModel from '@/models/Category';
+import { CategoryDto, CategoryInterface } from '@/@types/models';
+import categoriesController from '@/controllers/categories.controller';
 
 const get = (req: Request, res: Response) => {
-  return IncomeModel.find()
+  return CategoryModel.find()
     .sort({ created_at: 'desc' })
     .exec()
-    .then((data: IncomeInterface[]) => res.send(data))
+    .then((data: CategoryInterface[]) => res.send(data))
     .catch((err) => res.send(boom.notFound(err)));
 };
 
 const create = (req: Request, res: Response) => {
-  return IncomeModel.create(new IncomeDto(req.body))
-    .then((data: IncomeInterface) => {
-      incomeStatisticsController.update(data);
+  return CategoryModel.create(new CategoryDto(req.body))
+    .then((data: CategoryInterface) => {
       return res.send(data);
     })
     .catch((err) => res.send(boom.notFound(err)));
 };
 
 const remove = (req: Request, res: Response) => {
-  return IncomeModel.findOneAndRemove({ _id: req.params.incomeId })
+  return CategoryModel.findOneAndRemove({ _id: req.params.categoryId })
     .then((data) => {
       if (data) {
         res.send({ id: data._id });
@@ -35,11 +34,12 @@ const remove = (req: Request, res: Response) => {
 };
 
 const update = (req: Request, res: Response) => {
-  return IncomeModel.findOneAndUpdate(
-    { _id: req.params.incomeId },
-    { $set: new IncomeDto(req.body) },
+  return CategoryModel.findOneAndUpdate(
+    { _id: req.params.categoryId },
+    { $set: new CategoryDto(req.body) },
     { new: true }
   )
+
     .then((data) => {
       if (data) {
         res.send(data);

@@ -7,35 +7,36 @@ import userController from '@/controllers/user.controller';
 
 const router = promiseRouter();
 
-router.route('/login').post(
-  [
-    body('email')
-      .isEmail()
-      .withMessage('Email is not valid'),
-    body('password').exists()
-  ],
-  auth.optional,
-  userController.login
-);
+router
+  .route('/login')
+  .post(
+    [
+      body('email').isEmail().withMessage('Email is not valid'),
+      body('password').exists(),
+    ],
+    auth.optional,
+    userController.login
+  );
 
-router.route('/register').post(
-  [
-    body('email')
-      .isEmail()
-      .exists()
-      .withMessage('Email is not valid'),
-    body('password').exists(),
-    body('firstName').exists(),
-    body('lastName').exists()
-  ],
-  auth.optional,
-  userController.register
-);
+router
+  .route('/register')
+  .post(
+    [
+      body('email').isEmail().exists().withMessage('Email is not valid'),
+      body('password').exists(),
+      body('firstName').exists(),
+      body('lastName').exists(),
+    ],
+    auth.optional,
+    userController.register
+  );
 
+//  @ts-ignore
 router.route('/current').get(auth.required, userController.getCurrent);
 
 router.route('/logout').post((req: Request, res: Response) => {
   req.logout();
   res.redirect('/');
 });
+
 export default router;

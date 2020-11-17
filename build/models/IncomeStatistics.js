@@ -10,6 +10,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importStar(require("mongoose"));
 var incomeSchema = new mongoose_1.Schema({
     labels: [Date],
-    data: [Number]
+    data: [Number],
 });
 exports.default = mongoose_1.default.model('IncomeStatistics', incomeSchema);

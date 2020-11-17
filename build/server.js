@@ -58,30 +58,26 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(passport_1.default.initialize());
 app.use('/api/v1', routes_1.default);
-app.get('*', wrapAsync(function (req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(function () { return resolve(); }, 50); })];
-                case 1:
-                    _a.sent();
-                    throw new Error('Something was swrong');
-            }
-        });
+app.get('*', wrapAsync(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(function () { return resolve(); }, 50); })];
+            case 1:
+                _a.sent();
+                throw new Error('Something was swrong');
+        }
     });
-}));
+}); }));
 app.use(function (error, req, res, next) {
     throw boom_1.default.notFound(error.message);
 });
 if (config_1.default.has('port')) {
-    var appPort_1 = config_1.default.get('port');
-    app.listen(appPort_1, function () {
-        console.log("Listen on port: " + appPort_1);
-    });
+    var appPort = config_1.default.get('port');
+    app.listen(appPort);
 }
-app.listen((process.env.PORT || 5000), function () {
-    console.log('listening on *:5000');
-});
+else {
+    app.listen(process.env.PORT || 5000);
+}
 function wrapAsync(fn) {
     return function (req, res, next) {
         fn(req, res, next).catch(next);

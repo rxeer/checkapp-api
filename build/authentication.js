@@ -8,14 +8,14 @@ var passport_1 = __importDefault(require("passport"));
 var passport_jwt_1 = require("passport-jwt");
 var User_1 = __importDefault(require("@/models/User"));
 var passportOptions = {
-    jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken()
+    jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 if (config_1.default.has('auth.secret')) {
     passportOptions.secretOrKey = config_1.default.get('auth.secret');
 }
-var strategy = new passport_jwt_1.Strategy(passportOptions, function (jwt_payload, next) {
+var strategy = new passport_jwt_1.Strategy(passportOptions, function (jwtPayload, next) {
     //  @ts-ignore
-    User_1.default.getById(jwt_payload.id)
+    User_1.default.getById(jwtPayload.id)
         .then(function (user) {
         if (user && user.validatePassword('123123')) {
             next(null, user);

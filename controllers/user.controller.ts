@@ -2,7 +2,11 @@ import boom from 'boom';
 import { Request, Response } from 'express';
 
 import UserModel from '@/models/User';
-import { UserInterface, UserDto } from '@/@types/models';
+import {
+  UserInterface,
+  UserDto,
+  IGetUserAuthInfoRequest,
+} from '@/@types/models';
 
 const login = (req: Request, res: Response) => {
   return (
@@ -14,7 +18,7 @@ const login = (req: Request, res: Response) => {
         }
       })
       .catch(() => {
-        throw boom.notFound('Email or password incorrect');
+        res.json(boom.notFound('Email or password incorrect'));
       })
   );
 };
@@ -25,27 +29,31 @@ const register = (req: Request, res: Response) => {
   const finalUser: UserInterface = new UserModel(user);
   finalUser.setPassword(user.password);
 
-  return finalUser.save().then(() => res.json(finalUser.toAuthJSON()));
+  return finalUser
+    .save()
+    .then(() => res.json(finalUser.toAuthJSON()))
+    .catch(() => {
+      res.json(boom.notFound('User already exist'));
+    });
 };
 
-const getCurrent = (req: Request, res: Response) => {
+const getCurrent = (req: IGetUserAuthInfoRequest, res: Response) => {
   const {
-    //  @ts-ignore
-    payload: { id }
+    payload: { id },
   } = req;
 
   //  @ts-ignore
-  return UserModel.getById(id).then((user: UserInterface) => {
+  return UserModel.getById(id).then((user: UserDto) => {
     if (!user) {
       throw boom.notFound('User not found');
     }
-
-    return res.json(new UserDto(user));
+    //  @ts-ignore
+    return res.json(new UserDto({ ...user._doc, id }));
   });
 };
 
 export default {
   login,
   register,
-  getCurrent
+  getCurrent,
 };

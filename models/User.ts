@@ -11,7 +11,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   role: {
     type: String,
-    default: 'USER'
+    default: 'USER',
   },
   hash: String,
   salt: String,
@@ -19,7 +19,7 @@ const userSchema = new Schema({
   lastName: { type: String },
   avatar: { type: String },
   createdAt: { type: Date, default: Date.now },
-  email: { type: String, require: true, unique: 'This email is already used' }
+  email: { type: String, require: true, unique: 'This email is already used' },
 });
 
 userSchema.methods = {
@@ -56,7 +56,7 @@ userSchema.methods = {
         {
           email: this.email,
           id: this._id,
-          exp: expirationDate.getTime() / 1000
+          exp: expirationDate.getTime() / 1000,
         },
         authSecret
       );
@@ -67,10 +67,10 @@ userSchema.methods = {
     const refreshToken: string = randtoken.uid(256);
 
     return {
-      token: this.generateJWT(),
-      refreshToken
+      accessToken: this.generateJWT(),
+      refreshToken,
     };
-  }
+  },
 };
 
 userSchema.statics = {
@@ -79,7 +79,7 @@ userSchema.statics = {
       .select({ password: 0 })
       .exec()
       .then((user: UserInterface) => user);
-  }
+  },
 };
 
 userSchema.plugin(uniqueValidator);
