@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-import { ICategoryInterface } from '@/@types/models/UserCategory';
+import { IUserCategoryInterface } from '@/@types/models/UserCategory';
 
 const categorySchema: Schema = new Schema({
   description: { type: String },
@@ -9,4 +9,7 @@ const categorySchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.model<ICategoryInterface>('Category', categorySchema);
+export default mongoose.model<IUserCategoryInterface>(
+  'Category',
+  categorySchema
+);

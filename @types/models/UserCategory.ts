@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 import { IGetUserAuthInfoRequest } from './General';
 
-export interface ICategoryInterface extends Document {
+export interface IUserCategoryInterface extends Document {
   name: string;
   userId: string;
   createdAt: Date;
@@ -15,13 +15,13 @@ export interface IUserCategoriesRequest extends IGetUserAuthInfoRequest {
   };
 }
 
-export class ICategoryDto {
+export class IUserCategoryDto {
   public name: string = '';
   public userId: string = '';
   public description: string = '';
   public createdAt: Date = new Date();
 
-  constructor(data?: ICategoryDto) {
+  constructor(data?: IUserCategoryDto) {
     if (data) {
       this.name = data.name;
       this.userId = data.userId;

@@ -5,7 +5,7 @@ import omit from 'lodash/omit';
 import UserCategoryModel from '@/models/UserCategory';
 import {
   IUserCategoriesRequest,
-  ICategoryInterface,
+  IUserCategoryInterface,
 } from '@/@types/models/UserCategory';
 
 const get = (req: IUserCategoriesRequest, res: Response) => {
@@ -14,10 +14,10 @@ const get = (req: IUserCategoriesRequest, res: Response) => {
   return UserCategoryModel.find()
     .sort({ created_at: 'desc' })
     .exec()
-    .then((data: ICategoryInterface[]) => {
+    .then((data: IUserCategoryInterface[]) => {
       const list = data
-        .filter((item: ICategoryInterface) => item.userId === userId)
-        .map((item: ICategoryInterface) => omit(item, 'userId'));
+        .filter((item: IUserCategoryInterface) => item.userId === userId)
+        .map((item: IUserCategoryInterface) => omit(item, 'userId'));
 
       res.send(list);
     })
@@ -31,7 +31,7 @@ const create = (req: IUserCategoriesRequest, res: Response) => {
     ...req.body,
     userId,
   })
-    .then((data: ICategoryInterface) => {
+    .then((data: IUserCategoryInterface) => {
       return res.send(data);
     })
     .catch((err) => res.json(boom.notFound(err)));

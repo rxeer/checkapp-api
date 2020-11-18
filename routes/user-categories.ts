@@ -13,7 +13,7 @@ router
     [body('name').exists(), body('description').isString().exists()],
     auth.required,
     userCategoriesController.create
-)
+  )
   //  @ts-ignore
   .get(auth.required, userCategoriesController.get);
 
