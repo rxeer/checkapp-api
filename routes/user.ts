@@ -32,6 +32,9 @@ router
   );
 
 //  @ts-ignore
+router.route('/').put([], auth.required, userController.update);
+
+//  @ts-ignore
 router.route('/current').get(auth.required, userController.getCurrent);
 
 router.route('/logout').post((req: Request, res: Response) => {

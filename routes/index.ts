@@ -3,6 +3,7 @@ import userRoutes from './user';
 import uploadRoutes from './upload';
 import incomesRoutes from './incomes';
 import productsRoutes from './products';
+import statisticRoutes from './statistic';
 import familyGroupRoutes from './family-group';
 import userCategoriesRoutes from './user-categories';
 
@@ -14,6 +15,7 @@ router.use(
   userRoutes,
   productsRoutes,
   incomesRoutes,
+  statisticRoutes,
   userCategoriesRoutes,
   familyGroupRoutes
 );

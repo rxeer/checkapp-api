@@ -2,17 +2,14 @@ import boom from 'boom';
 import { Request, Response } from 'express';
 
 import UserModel from '@/models/User';
-import {
-  UserInterface,
-  UserDto,
-  IGetUserAuthInfoRequest,
-} from '@/@types/models';
+import { IUserInterface, UserDto } from '@/@types/models/User';
+import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
 const login = (req: Request, res: Response) => {
   return (
     UserModel.findOne({ email: req.body.email })
       //  @ts-ignore
-      .then((user: UserInterface) => {
+      .then((user: IUserInterface) => {
         if (user && user.validatePassword(req.body.password)) {
           return res.send(user.toAuthJSON());
         }
@@ -26,7 +23,7 @@ const login = (req: Request, res: Response) => {
 const register = (req: Request, res: Response) => {
   const user = req.body;
 
-  const finalUser: UserInterface = new UserModel(user);
+  const finalUser: IUserInterface = new UserModel(user);
   finalUser.setPassword(user.password);
 
   return finalUser
@@ -52,8 +49,30 @@ const getCurrent = (req: IGetUserAuthInfoRequest, res: Response) => {
   });
 };
 
+const update = (req: IGetUserAuthInfoRequest, res: Response) => {
+  const newData = {
+    ...req.body,
+  };
+  return UserModel.findOneAndUpdate(
+    { _id: req.payload.id },
+    //  @ts-ignore
+    { $set: new UserDto(newData) },
+    { new: true }
+  )
+    .then((user) => {
+      if (user) {
+        //  @ts-ignore
+        return res.json(new UserDto({ ...user._doc, id: req.payload.id }));
+      } else {
+        res.json(boom.notFound('User not found'));
+      }
+    })
+    .catch((err) => res.json(boom.notFound(err)));
+};
+
 export default {
   login,
+  update,
   register,
   getCurrent,
 };

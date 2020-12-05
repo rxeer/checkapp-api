@@ -3,7 +3,6 @@ import { body, param } from 'express-validator/check';
 
 import auth from './auth';
 import incomesController from '@/controllers/incomes.controller';
-import incomeStatisticsController from '@/controllers/income-statistics.controller';
 
 const router = promiseRouter();
 
@@ -30,7 +29,5 @@ router
     auth.required,
     incomesController.remove
   );
-
-router.route('/statistic').get(auth.required, incomeStatisticsController.get);
 
 export default router;

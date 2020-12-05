@@ -3,7 +3,7 @@ import passport from 'passport';
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 
 import UserModel from '@/models/User';
-import { UserInterface } from '@/@types/models';
+import { IUserInterface } from '@/@types/models';
 
 const passportOptions: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,7 +16,7 @@ if (config.has('auth.secret')) {
 const strategy: Strategy = new Strategy(passportOptions, (jwtPayload, next) => {
   //  @ts-ignore
   UserModel.getById(jwtPayload.id)
-    .then((user: UserInterface) => {
+    .then((user: IUserInterface) => {
       if (user && user.validatePassword('123123')) {
         next(null, user);
       } else {

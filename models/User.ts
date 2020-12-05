@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import randtoken from 'rand-token';
 import uniqueValidator from 'mongoose-unique-validator';
 
-import { UserInterface } from '@/@types/models';
+import { IUserInterface } from '@/@types/models';
 
 const { Schema } = mongoose;
 const userSchema = new Schema({
@@ -18,6 +18,7 @@ const userSchema = new Schema({
   firstName: { type: String },
   lastName: { type: String },
   avatar: { type: String },
+  onboardCompleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   email: { type: String, require: true, unique: 'This email is already used' },
 });
@@ -78,9 +79,9 @@ userSchema.statics = {
     return this.findOne({ _id })
       .select({ password: 0 })
       .exec()
-      .then((user: UserInterface) => user);
+      .then((user: IUserInterface) => user);
   },
 };
 
 userSchema.plugin(uniqueValidator);
-export default mongoose.model<UserInterface>('User', userSchema);
+export default mongoose.model<IUserInterface>('User', userSchema);

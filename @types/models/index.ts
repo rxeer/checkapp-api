@@ -1,6 +1,2 @@
-export { UserDto, UserInterface } from './User';
+export { UserDto, IUserInterface } from './User';
 export { IGetUserAuthInfoRequest } from './General';
-export {
-  IncomeStatisticInterface,
-  IncomeStatisticDto,
-} from './IncomeStatistics';
