@@ -7,6 +7,7 @@ const productSchema: Schema = new Schema({
   count: { type: Number, required: true },
   userId: { type: String, required: true },
   categoryId: { type: String, required: true },
+  familyGroupId: { type: String, required: false },
   createdDate: { type: Date, default: Date.now, required: true },
 });
 
