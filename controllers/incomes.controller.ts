@@ -33,7 +33,7 @@ const create = (req: IIncomesRequest, res: Response) => {
     userId: req.params.userId,
   })
     .then((data: IncomeInterface) => {
-      statisticsController.updateIncome(data);
+      statisticsController.updateIncome(req.params.incomeId, data);
       return res.send(omit(toPlainObject(data), 'userId'));
     })
     .catch((err) => res.json(boom.notFound(err)));

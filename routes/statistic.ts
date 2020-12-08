@@ -7,10 +7,7 @@ const router = promiseRouter();
 
 router
   .route('/statistic/income')
+  //  @ts-ignore
   .get(auth.required, statisticsController.getIncome);
-
-router
-  .route('/statistic/outcome')
-  .get(auth.required, statisticsController.getOutcome);
 
 export default router;

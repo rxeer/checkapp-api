@@ -7,62 +7,45 @@ import {
   IncomeStatisticInterface,
 } from '@/@types/models/Statistics';
 import { IncomeInterface } from '@/@types/models/Incomes';
+import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
-const getIncome = (req: Request, res: Response) => {
+const getIncome = (req: IGetUserAuthInfoRequest, res: Response) => {
+  const userId = req.payload.id;
   return IncomeStatisticsModel.find()
     .exec()
     .then((data: IncomeStatisticInterface[]) => {
-      return res.send(
-        data
-          ? data[data.length - 1]
-          : new IncomeStatisticDto({ labels: [], data: [] })
+      const statistic = data.find(
+        (item: IncomeStatisticInterface) => item.userId === userId
+      );
+      return res.json(
+        statistic || new IncomeStatisticDto({ data: [], userId, labels: [] })
       );
     });
 };
 
-const updateIncome = ({ income, date }: IncomeInterface) => {
+const updateIncome = (
+  incomeId: string,
+  { income, date, userId }: IncomeInterface
+) => {
   return IncomeStatisticsModel.find().then(
     (statistics: IncomeStatisticInterface[]) => {
-      const currentStatistics: IncomeStatisticInterface =
-        statistics[statistics.length - 1] || {};
-      const data: number[] = currentStatistics.data || [];
-      const labels: Date[] = currentStatistics.labels || [];
-
-      labels.push(date);
-      data.push(income);
-
-      return IncomeStatisticsModel.create({ data, labels }).catch((err) => {
-        throw boom.notFound(err);
-      });
-    }
-  );
-};
-
-const getOutcome = (req: Request, res: Response) => {
-  return IncomeStatisticsModel.find()
-    .exec()
-    .then((data: IncomeStatisticInterface[]) => {
-      return res.send(
-        data
-          ? data[data.length - 1]
-          : new IncomeStatisticDto({ labels: [], data: [] })
+      const statistic = statistics.find(
+        (item: IncomeStatisticInterface) => item.userId === userId
       );
-    });
-};
+      statistic?.data.push(income);
+      statistic?.labels.push(date);
 
-const updateOutcome = ({ income, date }: IncomeInterface) => {
-  return IncomeStatisticsModel.find().then(
-    (statistics: IncomeStatisticInterface[]) => {
-      const currentStatistics: IncomeStatisticInterface =
-        statistics[statistics.length - 1] || {};
-      const data: number[] = currentStatistics.data || [];
-      const labels: Date[] = currentStatistics.labels || [];
-
-      labels.push(date);
-      data.push(income);
-
-      return IncomeStatisticsModel.create({ data, labels }).catch((err) => {
-        throw boom.notFound(err);
+      return IncomeStatisticsModel.findOneAndUpdate(
+        { _id: incomeId },
+        //  @ts-ignore
+        { $set: new IncomeStatisticDto(statistic) },
+        { new: true }
+      ).then((user) => {
+        if (user) {
+          //  @ts-ignore
+          return res.json(statistic);
+        } else {
+        }
       });
     }
   );
@@ -70,7 +53,5 @@ const updateOutcome = ({ income, date }: IncomeInterface) => {
 
 export default {
   getIncome,
-  getOutcome,
   updateIncome,
-  updateOutcome,
 };
