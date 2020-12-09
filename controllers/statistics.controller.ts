@@ -6,52 +6,37 @@ import {
   IncomeStatisticDto,
   IncomeStatisticInterface,
 } from '@/@types/models/Statistics';
+import IncomeModel from '@/models/Incomes';
 import { IncomeInterface } from '@/@types/models/Incomes';
 import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
 const getIncome = (req: IGetUserAuthInfoRequest, res: Response) => {
   const userId = req.payload.id;
-  return IncomeStatisticsModel.find()
+  return IncomeModel.find()
+    .sort({ created_at: 'desc' })
     .exec()
-    .then((data: IncomeStatisticInterface[]) => {
-      const statistic = data.find(
-        (item: IncomeStatisticInterface) => item.userId === userId
+    .then((data: IncomeInterface[]) => {
+      const list = data.filter(
+        (item: IncomeInterface) => item.userId === userId
       );
-      return res.json(
-        statistic || new IncomeStatisticDto({ data: [], userId, labels: [] })
-      );
-    });
-};
+      const dataList = list.map((a: IncomeInterface): number => a.income);
+      const dataLabels = list.map((a: IncomeInterface): Date => a.date);
+      const totalIncome = dataList.reduce((a: number, item: number): number => {
+        return a + item;
+      }, 0);
 
-const updateIncome = (
-  incomeId: string,
-  { income, date, userId }: IncomeInterface
-) => {
-  return IncomeStatisticsModel.find().then(
-    (statistics: IncomeStatisticInterface[]) => {
-      const statistic = statistics.find(
-        (item: IncomeStatisticInterface) => item.userId === userId
+      res.json(
+        new IncomeStatisticDto({
+          userId,
+          data: dataList,
+          labels: dataLabels,
+          total: totalIncome,
+        })
       );
-      statistic?.data.push(income);
-      statistic?.labels.push(date);
-
-      return IncomeStatisticsModel.findOneAndUpdate(
-        { _id: incomeId },
-        //  @ts-ignore
-        { $set: new IncomeStatisticDto(statistic) },
-        { new: true }
-      ).then((user) => {
-        if (user) {
-          //  @ts-ignore
-          return res.json(statistic);
-        } else {
-        }
-      });
-    }
-  );
+    })
+    .catch((err) => res.json(boom.notFound(err)));
 };
 
 export default {
   getIncome,
-  updateIncome,
 };

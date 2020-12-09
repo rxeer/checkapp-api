@@ -9,7 +9,6 @@ import {
   IncomeDto,
   IIncomesRequest,
 } from '@/@types/models/Incomes';
-import statisticsController from '@/controllers/statistics.controller';
 
 const get = (req: Request, res: Response) => {
   const userId = req.params.userId;
@@ -33,7 +32,6 @@ const create = (req: IIncomesRequest, res: Response) => {
     userId: req.params.userId,
   })
     .then((data: IncomeInterface) => {
-      statisticsController.updateIncome(req.params.incomeId, data);
       return res.send(omit(toPlainObject(data), 'userId'));
     })
     .catch((err) => res.json(boom.notFound(err)));
