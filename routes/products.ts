@@ -13,7 +13,8 @@ router
     [
       body('createdDate').isString().exists(),
       body('count').isString().exists(),
-      body('categoryId').isString().exists(),
+      body('category').exists(),
+      body('familyGroup').exists(),
     ],
     auth.required,
     productsController.createProduct

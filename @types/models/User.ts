@@ -7,6 +7,7 @@ export interface IUserInterface extends Document {
   email: string;
   firstName: string;
   lastName: string;
+  currency: string;
   created_at: string;
   onboardCompleted: boolean;
   generateJWT: () => string;
@@ -24,6 +25,7 @@ export class UserDto {
   public role: string = '';
   public avatar: string = '';
   public email: string = '';
+  public currency: string = '';
   public firstName: string = '';
   public lastName: string = '';
   public createdAt: string = '';
@@ -34,6 +36,7 @@ export class UserDto {
       this.id = data.id;
       this.role = data.role || 'USER';
       this.email = data.email;
+      this.currency = data.currency;
       this.onboardCompleted = data.onboardCompleted;
       this.avatar =
         'https://firebasestorage.googleapis.com/v0/b/icheck-ce8b6.appspot.com/o/Mask%20Group.png?alt=media&token=c79ddad1-fcfa-4a17-a910-49a4f478eabf' ||

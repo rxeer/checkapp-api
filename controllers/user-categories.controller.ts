@@ -38,15 +38,24 @@ const create = (req: IUserCategoriesRequest, res: Response) => {
 };
 
 const remove = (req: IUserCategoriesRequest, res: Response) => {
-  return UserCategoryModel.findOneAndRemove({ _id: req.params.categoryId })
+  return UserCategoryModel.findOne({ _id: req.params.categoryId })
     .then((data) => {
-      if (data) {
-        res.send({ id: data._id });
-      } else {
-        res.json(boom.notFound('Category not found'));
-      }
+      return UserCategoryModel.findOneAndUpdate(
+        { _id: req.params.categoryId },
+        //  @ts-ignore
+        { $set: new { ...data._doc, active: false }() },
+        { new: true }
+      )
+        .then((category) => {
+          if (category) {
+            res.send({ id: req.params.categoryId });
+          } else {
+            res.json(boom.notFound('Category not found'));
+          }
+        })
+        .catch((err) => res.json(boom.notFound(err)));
     })
-    .catch((err) => res.send(boom.notFound(err)));
+    .catch((err) => res.json(boom.notFound(err)));
 };
 
 const update = (req: IUserCategoriesRequest, res: Response) => {

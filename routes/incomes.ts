@@ -12,6 +12,7 @@ router
   .post(
     [
       body('date').exists(),
+      body('type').exists(),
       body('income').exists(),
       body('description').isString().exists(),
     ],

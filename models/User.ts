@@ -17,6 +17,7 @@ const userSchema = new Schema({
   salt: String,
   firstName: { type: String },
   lastName: { type: String },
+  currency: { type: String },
   avatar: { type: String },
   onboardCompleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },

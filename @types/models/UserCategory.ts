@@ -5,6 +5,7 @@ export interface IUserCategoryInterface extends Document {
   name: string;
   userId: string;
   createdAt: Date;
+  active: boolean;
   description: string;
 }
 
@@ -18,6 +19,7 @@ export interface IUserCategoriesRequest extends IGetUserAuthInfoRequest {
 export class IUserCategoryDto {
   public name: string = '';
   public userId: string = '';
+  public active: boolean = true;
   public description: string = '';
   public createdAt: Date = new Date();
 
@@ -25,6 +27,7 @@ export class IUserCategoryDto {
     if (data) {
       this.name = data.name;
       this.userId = data.userId;
+      this.active = data.active;
       this.createdAt = data.createdAt;
       this.description = data.description;
     }

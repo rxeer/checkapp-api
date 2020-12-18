@@ -38,13 +38,22 @@ const create = (req: IFamilyGroupRequest, res: Response) => {
 };
 
 const remove = (req: IFamilyGroupRequest, res: Response) => {
-  return FamilyGroupModel.findOneAndRemove({ _id: req.params.familyId })
+  return FamilyGroupModel.findOne({ _id: req.params.familyId })
     .then((data) => {
-      if (data) {
-        res.send({ id: data._id });
-      } else {
-        res.json(boom.notFound('Family group not found'));
-      }
+      return FamilyGroupModel.findOneAndUpdate(
+        { _id: req.params.familyId },
+        //  @ts-ignore
+        { $set: new FamilyGroupDto({ ...data._doc, active: false }) },
+        { new: true }
+      )
+        .then((familyGroup) => {
+          if (familyGroup) {
+            res.send({ id: req.params.familyId });
+          } else {
+            res.json(boom.notFound('Family group not found'));
+          }
+        })
+        .catch((err) => res.json(boom.notFound(err)));
     })
     .catch((err) => res.json(boom.notFound(err)));
 };
