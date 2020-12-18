@@ -9,7 +9,11 @@ const router = promiseRouter();
 //  @ts-ignore
 router
   .route('/:userId/family-group')
-  .post([body('name').exists()], auth.required, familyGroupController.create)
+  .post(
+    [body('name').exists(), body('description').exists()],
+    auth.required,
+    familyGroupController.create
+  )
   .get(auth.required, familyGroupController.get);
 
 //  @ts-ignore

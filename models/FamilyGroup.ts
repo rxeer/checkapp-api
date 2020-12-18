@@ -7,6 +7,7 @@ const familyGroupSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   userId: { type: String, default: '' },
   active: { type: Boolean, default: true },
+  description: { type: String, default: '', required: true },
 });
 
 export default mongoose.model<IFamilyGroupInterface>(
