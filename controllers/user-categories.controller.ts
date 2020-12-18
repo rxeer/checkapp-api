@@ -63,7 +63,7 @@ const update = (req: IUserCategoriesRequest, res: Response) => {
 
   return UserCategoryModel.findOneAndUpdate(
     { _id: req.params.categoryId },
-    { $set: { ...req.body, userId } },
+    { $set: { ...req.body, userId, active: true } },
     { new: true }
   )
 

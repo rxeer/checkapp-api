@@ -61,6 +61,7 @@ const remove = (req: IFamilyGroupRequest, res: Response) => {
 const update = (req: IFamilyGroupRequest, res: Response) => {
   const newData = {
     ...req.body,
+    active: true,
     userId: req.params.userId,
   };
   return FamilyGroupModel.findOneAndUpdate(
