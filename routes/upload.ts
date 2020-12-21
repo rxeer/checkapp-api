@@ -1,11 +1,11 @@
 import promiseRouter from 'express-promise-router';
 
 import auth from './auth';
-import upload from '@/configurations/storage';
 import uploadController from '@/controllers/upload.controller';
 
 const router = promiseRouter();
 
-router.route('/file').post(upload.single('file'), uploadController.uploadFile);
+//  @ts-ignore
+router.route('/avatar').post([], auth.required, uploadController.uploadAvatar);
 
 export default router;

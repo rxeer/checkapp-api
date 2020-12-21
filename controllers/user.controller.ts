@@ -10,6 +10,14 @@ const login = (req: Request, res: Response) => {
     UserModel.findOne({ email: req.body.email })
       //  @ts-ignore
       .then((user: IUserInterface) => {
+        if (!user) {
+          return res.json(boom.notFound('Email or password incorrect'));
+        }
+
+        if (!user.validatePassword(req.body.password)) {
+          return res.json(boom.notFound('Incorrect password'));
+        }
+
         if (user && user.validatePassword(req.body.password)) {
           return res.send(user.toAuthJSON());
         }

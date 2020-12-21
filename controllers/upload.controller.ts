@@ -1,16 +1,16 @@
-import boom from 'boom';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
-const uploadFile = (req: Request, res: Response) => {
-  if (req.file && req.file.path) {
-    return res.send({
-      url: `${req.protocol}://${req.hostname}:3003/${req.file.path}`,
-    });
-  }
+const uploadAvatar = async (req: IGetUserAuthInfoRequest, res: Response) => {
+  const {
+    payload: { id },
+  } = req;
+  //  @ts-ignore
+  const file = req.files.file;
 
-  throw boom.unsupportedMediaType('User not found');
+  res.json({ url: `${file.tempFilePath}/${file.name}` });
 };
 
 export default {
-  uploadFile,
+  uploadAvatar,
 };
