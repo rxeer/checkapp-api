@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+//  @ts-ignore
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 import { ITransactionInterface } from '@/@types/models/Transaction';
