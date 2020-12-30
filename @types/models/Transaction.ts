@@ -5,7 +5,7 @@ type OptionType = {
   id: string;
   name: string;
 };
-export interface IProductInterface extends Document {
+export interface ITransactionInterface extends Document {
   count: number;
   userId: string;
   createdDate: Date;
@@ -14,14 +14,18 @@ export interface IProductInterface extends Document {
   familyGroup: OptionType;
 }
 
-export interface IProductsRequest extends IGetUserAuthInfoRequest {
+export interface ITransactionRequest extends IGetUserAuthInfoRequest {
   params: {
     userId: string;
-    productId: string;
+    transactionId: string;
+  };
+  query: {
+    page: number;
+    limit: number;
   };
 }
 
-export class ProductDto {
+export class TransactionDto {
   public count: number = 0;
   public userId: string = '';
   public category: OptionType = {
@@ -35,7 +39,7 @@ export class ProductDto {
   };
   public createdDate: Date = new Date();
 
-  constructor(data?: ProductDto) {
+  constructor(data?: TransactionDto) {
     if (data) {
       this.count = data.count;
       this.userId = data.userId;

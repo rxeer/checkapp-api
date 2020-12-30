@@ -2,13 +2,13 @@ import promiseRouter from 'express-promise-router';
 import { body, param } from 'express-validator/check';
 
 import auth from './auth';
-import productsController from '@/controllers/products.controller';
+import transactionsController from '@/controllers/transactions.controller';
 
 const router = promiseRouter();
 
 //  @ts-ignore
 router
-  .route('/:userId/products')
+  .route('/:userId/transactions')
   .post(
     [
       body('createdDate').isString().exists(),
@@ -17,23 +17,26 @@ router
       body('familyGroup').exists(),
     ],
     auth.required,
-    productsController.createProduct
-  )
+    transactionsController.create
+  );
+
+router
+  .route('/:userId/transactions')
   //  @ts-ignore
-  .get(auth.optional, productsController.get);
+  .get(auth.required, transactionsController.get);
 
 //  @ts-ignore
 router
-  .route('/:userId/products/:productId')
+  .route('/:userId/transactions/:transactionId')
   .put(
-    [param('productId').isMongoId()],
+    [param('transactionId').isMongoId()],
     auth.required,
-    productsController.update
+    transactionsController.update
   )
   .delete(
-    [param('productId').isMongoId()],
+    [param('transactionId').isMongoId()],
     auth.required,
-    productsController.remove
+    transactionsController.remove
   );
 
 export default router;

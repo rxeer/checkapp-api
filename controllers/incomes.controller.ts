@@ -13,15 +13,11 @@ import {
 const get = (req: Request, res: Response) => {
   const userId = req.params.userId;
 
-  return IncomeModel.find()
+  return IncomeModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: IncomeInterface[]) => {
-      const list = data
-        .filter((item: IncomeInterface) => item.userId === userId)
-        .map((item: IncomeInterface) => omit(item, 'userId'));
-
-      res.send(list);
+      res.json(data);
     })
     .catch((err) => res.json(boom.notFound(err)));
 };

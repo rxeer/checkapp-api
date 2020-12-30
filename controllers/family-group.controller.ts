@@ -13,15 +13,11 @@ import {
 const get = (req: Request, res: Response) => {
   const userId = req.params.userId;
 
-  return FamilyGroupModel.find()
+  return FamilyGroupModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: IFamilyGroupInterface[]) => {
-      const list = data
-        .filter((item: IFamilyGroupInterface) => item.userId === userId)
-        .map((item: IFamilyGroupInterface) => omit(item, 'userId'));
-
-      res.send(list);
+      res.json(data);
     })
     .catch((err) => res.json(boom.notFound(err)));
 };

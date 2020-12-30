@@ -1,9 +1,9 @@
 import express from 'express';
 import userRoutes from './user';
 import incomesRoutes from './incomes';
-import productsRoutes from './products';
 import statisticRoutes from './statistic';
 import familyGroupRoutes from './family-group';
+import transactionsRoutes from './transactions';
 import userCategoriesRoutes from './user-categories';
 
 const router = express.Router();
@@ -11,10 +11,10 @@ const router = express.Router();
 router.use(
   '/users',
   userRoutes,
-  productsRoutes,
   incomesRoutes,
   statisticRoutes,
   userCategoriesRoutes,
+  transactionsRoutes,
   familyGroupRoutes
 );
 

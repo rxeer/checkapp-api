@@ -1,9 +1,9 @@
 import boom from 'boom';
 import { Response } from 'express';
-import omit from 'lodash/omit';
 
 import UserCategoryModel from '@/models/UserCategory';
 import {
+  IUserCategoryDto,
   IUserCategoriesRequest,
   IUserCategoryInterface,
 } from '@/@types/models/UserCategory';
@@ -11,15 +11,11 @@ import {
 const get = (req: IUserCategoriesRequest, res: Response) => {
   const userId = req.params.userId;
 
-  return UserCategoryModel.find()
+  return UserCategoryModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: IUserCategoryInterface[]) => {
-      const list = data
-        .filter((item: IUserCategoryInterface) => item.userId === userId)
-        .map((item: IUserCategoryInterface) => omit(item, 'userId'));
-
-      res.send(list);
+      res.json(data);
     })
     .catch((err) => res.json(boom.notFound(err)));
 };
@@ -43,7 +39,7 @@ const remove = (req: IUserCategoriesRequest, res: Response) => {
       return UserCategoryModel.findOneAndUpdate(
         { _id: req.params.categoryId },
         //  @ts-ignore
-        { $set: new { ...data._doc, active: false }() },
+        { $set: new IUserCategoryDto({ ...data._doc, active: false }) },
         { new: true }
       )
         .then((category) => {
