@@ -34,7 +34,7 @@ const get = (req: ITransactionRequest, res: Response) => {
     {
       page: req.query.page,
       limit: req.query.limit,
-      sort: { date: 1 },
+      sort: { createdDate: 'desc' },
       customLabels: {
         docs: 'list',
       },
