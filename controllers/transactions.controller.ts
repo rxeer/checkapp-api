@@ -30,7 +30,7 @@ const get = (req: ITransactionRequest, res: Response) => {
 
   //  @ts-ignore
   return TransactionModel.paginate(
-    { userId, sort: 'desc' },
+    { userId },
     {
       page: req.query.page,
       limit: req.query.limit,
