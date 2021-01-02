@@ -46,6 +46,18 @@ const get = (req: ITransactionRequest, res: Response) => {
     .catch((err: any) => res.json(boom.notFound(err)));
 };
 
+const getAll = (req: ITransactionRequest, res: Response) => {
+  const userId = req.params.userId;
+
+  return TransactionModel.find({ userId })
+    .sort({ created_at: 'desc' })
+    .exec()
+    .then((data: ITransactionInterface[]) => {
+      res.json(data);
+    })
+    .catch((err: any) => res.json(boom.notFound(err)));
+};
+
 const remove = (req: ITransactionRequest, res: Response) => {
   return TransactionModel.findOneAndRemove({ _id: req.params.transactionId })
     .then((data) => {
@@ -83,6 +95,7 @@ const update = (req: ITransactionRequest, res: Response) => {
 
 export default {
   get,
+  getAll,
   remove,
   update,
   create,

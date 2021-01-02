@@ -25,6 +25,11 @@ router
   //  @ts-ignore
   .get(auth.required, transactionsController.get);
 
+router
+  .route('/:userId/transactions/statistic')
+  //  @ts-ignore
+  .get(auth.required, transactionsController.getAll);
+
 //  @ts-ignore
 router
   .route('/:userId/transactions/:transactionId')
