@@ -21,6 +21,7 @@ const userSchema = new Schema({
   avatar: { type: String },
   onboardCompleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
+  //  @ts-ignore
   email: { type: String, require: true, unique: 'This email is already used' },
 });
 
@@ -29,8 +30,11 @@ userSchema.methods = {
     if (config.has('auth.hash')) {
       const authJWTHash: string = config.get('auth.hash');
 
+      //  @ts-ignore
       this.salt = crypto.randomBytes(16).toString('hex');
+      //  @ts-ignore\
       this.hash = crypto
+        //  @ts-ignore
         .pbkdf2Sync(password, this.salt, 10000, 512, authJWTHash)
         .toString('hex');
     }
@@ -40,9 +44,12 @@ userSchema.methods = {
     if (config.has('auth.hash')) {
       const authJWTHash: string = config.get('auth.hash');
 
+      //  @ts-ignore
       const hash = crypto
+        //  @ts-ignore
         .pbkdf2Sync(password, this.salt, 10000, 512, authJWTHash)
         .toString('hex');
+      //  @ts-ignore
       return this.hash === hash;
     }
   },

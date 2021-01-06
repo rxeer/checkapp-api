@@ -7,9 +7,24 @@ import { ITransactionInterface } from '@/@types/models/Transaction';
 const transactionSchema: Schema = new Schema({
   description: { type: String },
   count: { type: Number, required: true },
-  userId: { type: String, required: true },
-  category: { type: Object, required: true },
-  familyGroup: { type: Object, required: false },
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+  },
+  category: {
+    id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Category',
+    },
+    name: { type: String },
+  },
+  familyGroup: {
+    id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'FamilyGroup',
+    },
+    name: { type: String },
+  },
   createdDate: { type: Date, default: Date.now, required: true },
 });
 

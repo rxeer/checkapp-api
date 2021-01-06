@@ -17,7 +17,7 @@ const get = (req: IUserCategoriesRequest, res: Response) => {
     .then((data: IUserCategoryInterface[]) => {
       res.json(data);
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const create = (req: IUserCategoriesRequest, res: Response) => {
@@ -35,23 +35,23 @@ const create = (req: IUserCategoriesRequest, res: Response) => {
 
 const remove = (req: IUserCategoriesRequest, res: Response) => {
   return UserCategoryModel.findOne({ _id: req.params.categoryId })
-    .then((data) => {
+    .then((data: IUserCategoriesRequest) => {
       return UserCategoryModel.findOneAndUpdate(
         { _id: req.params.categoryId },
         //  @ts-ignore
         { $set: new IUserCategoryDto({ ...data._doc, active: false }) },
         { new: true }
       )
-        .then((category) => {
+        .then((category: IUserCategoryInterface) => {
           if (category) {
-            res.send({ id: req.params.categoryId });
+            res.json({ id: req.params.categoryId });
           } else {
             res.json(boom.notFound('Category not found'));
           }
         })
-        .catch((err) => res.json(boom.notFound(err)));
+        .catch((err: Error) => res.json(boom.notFound(`${err}`)));
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const update = (req: IUserCategoriesRequest, res: Response) => {
@@ -63,14 +63,14 @@ const update = (req: IUserCategoriesRequest, res: Response) => {
     { new: true }
   )
 
-    .then((data) => {
+    .then((data: IUserCategoriesRequest) => {
       if (data) {
-        res.send(data);
+        res.json(data);
       } else {
         res.json(boom.notFound('Category not found'));
       }
     })
-    .catch((err) => res.send(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 export default {

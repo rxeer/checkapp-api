@@ -43,7 +43,7 @@ const get = (req: ITransactionRequest, res: Response) => {
     .then((data: ITransactionInterface[]) => {
       res.json(data);
     })
-    .catch((err: any) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const getAll = (req: ITransactionRequest, res: Response) => {
@@ -55,19 +55,19 @@ const getAll = (req: ITransactionRequest, res: Response) => {
     .then((data: ITransactionInterface[]) => {
       res.json(data);
     })
-    .catch((err: any) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const remove = (req: ITransactionRequest, res: Response) => {
   return TransactionModel.findOneAndRemove({ _id: req.params.transactionId })
-    .then((data) => {
+    .then((data: ITransactionInterface) => {
       if (data) {
         res.send({ id: data._id });
       } else {
         res.json(boom.notFound('transactionId not found'));
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const update = (req: ITransactionRequest, res: Response) => {
@@ -83,14 +83,14 @@ const update = (req: ITransactionRequest, res: Response) => {
     { new: true }
   )
 
-    .then((data) => {
+    .then((data: ITransactionInterface) => {
       if (data) {
         res.send(data);
       } else {
         res.json(boom.notFound('transactionId not found'));
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 export default {

@@ -19,7 +19,7 @@ const get = (req: Request, res: Response) => {
     .then((data: IFamilyGroupInterface[]) => {
       res.json(data);
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const create = (req: IFamilyGroupRequest, res: Response) => {
@@ -35,23 +35,23 @@ const create = (req: IFamilyGroupRequest, res: Response) => {
 
 const remove = (req: IFamilyGroupRequest, res: Response) => {
   return FamilyGroupModel.findOne({ _id: req.params.familyId })
-    .then((data) => {
+    .then((data: IFamilyGroupInterface) => {
       return FamilyGroupModel.findOneAndUpdate(
         { _id: req.params.familyId },
         //  @ts-ignore
         { $set: new FamilyGroupDto({ ...data._doc, active: false }) },
         { new: true }
       )
-        .then((familyGroup) => {
+        .then((familyGroup: IFamilyGroupInterface) => {
           if (familyGroup) {
             res.send({ id: req.params.familyId });
           } else {
             res.json(boom.notFound('Family group not found'));
           }
         })
-        .catch((err) => res.json(boom.notFound(err)));
+        .catch((err: Error) => res.json(boom.notFound(`${err}`)));
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const update = (req: IFamilyGroupRequest, res: Response) => {
@@ -66,14 +66,14 @@ const update = (req: IFamilyGroupRequest, res: Response) => {
     { $set: new FamilyGroupDto(newData) },
     { new: true }
   )
-    .then((data) => {
+    .then((data: IFamilyGroupInterface) => {
       if (data) {
         res.send(data);
       } else {
         res.json(boom.notFound('Family group not found'));
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 export default {

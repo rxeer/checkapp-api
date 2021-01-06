@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import express, { Request, Response, Application, NextFunction } from 'express';
 
 import router from './routes';
+import adminConfiguration from './configurations/admin';
 
 import {
   configureCors,
@@ -26,6 +27,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
+app.use(adminConfiguration.config.options.rootPath, adminConfiguration.router);
 
 app.use('/api/v1', router);
 

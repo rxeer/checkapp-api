@@ -1,11 +1,7 @@
 import boom from 'boom';
-import { Request, Response } from 'express';
-import IncomeStatisticsModel from '@/models/IncomeStatistics';
+import { Response } from 'express';
 
-import {
-  IncomeStatisticDto,
-  IncomeStatisticInterface,
-} from '@/@types/models/Statistics';
+import { IncomeStatisticDto } from '@/@types/models/Statistics';
 import IncomeModel from '@/models/Incomes';
 import { IncomeInterface } from '@/@types/models/Incomes';
 import { IGetUserAuthInfoRequest } from '@/@types/models/General';
@@ -34,7 +30,7 @@ const getIncome = (req: IGetUserAuthInfoRequest, res: Response) => {
         })
       );
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 export default {

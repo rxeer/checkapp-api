@@ -67,7 +67,7 @@ const update = (req: IGetUserAuthInfoRequest, res: Response) => {
     { $set: new UserDto(newData) },
     { new: true }
   )
-    .then((user) => {
+    .then((user: IUserInterface) => {
       if (user) {
         //  @ts-ignore
         return res.json(new UserDto({ ...user._doc, id: req.payload.id }));
@@ -75,7 +75,7 @@ const update = (req: IGetUserAuthInfoRequest, res: Response) => {
         res.json(boom.notFound('User not found'));
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: any) => res.json(boom.notFound(err)));
 };
 
 export default {

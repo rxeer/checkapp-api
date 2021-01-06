@@ -19,7 +19,7 @@ const get = (req: Request, res: Response) => {
     .then((data: IncomeInterface[]) => {
       res.json(data);
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const create = (req: IIncomesRequest, res: Response) => {
@@ -30,19 +30,19 @@ const create = (req: IIncomesRequest, res: Response) => {
     .then((data: IncomeInterface) => {
       return res.send(omit(toPlainObject(data), 'userId'));
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const remove = (req: IIncomesRequest, res: Response) => {
   return IncomeModel.findOneAndRemove({ _id: req.params.incomeId })
-    .then((data) => {
+    .then((data: IncomeInterface) => {
       if (data) {
         res.send({ id: data._id });
       } else {
         res.json(boom.notFound('Income id not found'));
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 const update = (req: IIncomesRequest, res: Response) => {
@@ -56,14 +56,14 @@ const update = (req: IIncomesRequest, res: Response) => {
     { $set: new IncomeDto(newData) },
     { new: true }
   )
-    .then((data) => {
+    .then((data: IncomeInterface) => {
       if (data) {
         res.send(data);
       } else {
         res.json(boom.notFound('Income id not found'));
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
 export default {
