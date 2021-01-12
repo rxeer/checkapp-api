@@ -1,51 +1,49 @@
-import boom from 'boom';
-import { Request, Response } from 'express';
+import { Context } from 'koa';
 
 import UserModel from '@/models/User';
 import { IUserInterface, UserDto } from '@/@types/models/User';
-import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
-const login = (req: Request, res: Response) => {
+const login = (ctx: Context) => {
   return (
-    UserModel.findOne({ email: req.body.email })
+    UserModel.findOne({ email: ctx.request.body.email })
       //  @ts-ignore
       .then((user: IUserInterface) => {
         if (!user) {
-          return res.json(boom.notFound('Email or password incorrect'));
+          return ctx.throw('Email or password incorrect');
         }
 
-        if (!user.validatePassword(req.body.password)) {
-          return res.json(boom.notFound('Incorrect password'));
+        if (!user.validatePassword(ctx.request.body.password)) {
+          return ctx.throw('Incorrect password');
         }
 
-        if (user && user.validatePassword(req.body.password)) {
-          return res.send(user.toAuthJSON());
+        if (user && user.validatePassword(ctx.request.body.password)) {
+          return (ctx.body = user.toAuthJSON());
         }
       })
       .catch(() => {
-        res.json(boom.notFound('Email or password incorrect'));
+        ctx.throw('Email or password incorrect');
       })
   );
 };
 
-const register = (req: Request, res: Response) => {
-  const user = req.body;
+const register = (ctx: Context) => {
+  const user = ctx.request.body;
 
   const finalUser: IUserInterface = new UserModel(user);
   finalUser.setPassword(user.password);
 
   return finalUser
     .save()
-    .then(() => res.json(finalUser.toAuthJSON()))
+    .then(() => (ctx.body = finalUser.toAuthJSON()))
     .catch(() => {
-      res.json(boom.notFound('User already exist'));
+      ctx.throw('User already exist');
     });
 };
 
-const getCurrent = (req: IGetUserAuthInfoRequest, res: Response) => {
+const getCurrent = (ctx: Context) => {
   const {
     payload: { id },
-  } = req;
+  } = ctx;
 
   //  @ts-ignore
   return UserModel.getById(id).then((user: UserDto) => {
@@ -57,12 +55,12 @@ const getCurrent = (req: IGetUserAuthInfoRequest, res: Response) => {
   });
 };
 
-const update = (req: IGetUserAuthInfoRequest, res: Response) => {
+const update = (ctx: Context) => {
   const newData = {
-    ...req.body,
+    ...ctx.request.body,
   };
   return UserModel.findOneAndUpdate(
-    { _id: req.payload.id },
+    { _id: ctx.request.payload.id },
     //  @ts-ignore
     { $set: new UserDto(newData) },
     { new: true }
@@ -72,10 +70,10 @@ const update = (req: IGetUserAuthInfoRequest, res: Response) => {
         //  @ts-ignore
         return res.json(new UserDto({ ...user._doc, id: req.payload.id }));
       } else {
-        res.json(boom.notFound('User not found'));
+        ctx.throw('User not found');
       }
     })
-    .catch((err: any) => res.json(boom.notFound(err)));
+    .catch((err: any) => ctx.throw(err));
 };
 
 export default {

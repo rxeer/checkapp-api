@@ -1,6 +1,3 @@
-import promiseRouter from 'express-promise-router';
-import { body, param } from 'express-validator/check';
-
 import auth from './auth';
 import incomesController from '@/controllers/incomes.controller';
 

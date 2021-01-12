@@ -21,8 +21,7 @@ const userSchema = new Schema({
   avatar: { type: String },
   onboardCompleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
-  //  @ts-ignore
-  email: { type: String, require: true, unique: 'This email is already used' },
+  email: { type: String, require: true, unique: true },
 });
 
 userSchema.methods = {
@@ -91,5 +90,5 @@ userSchema.statics = {
   },
 };
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator, { message: 'This email is already used' });
 export default mongoose.model<IUserInterface>('User', userSchema);

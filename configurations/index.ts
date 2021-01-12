@@ -1,3 +1,3 @@
-export { configureCors } from './cors';
 export { configureLogger } from './logger';
+export { configureAdmin } from './admin';
 export { configureConnection } from './mongoose';

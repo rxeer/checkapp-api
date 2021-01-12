@@ -1,5 +1,4 @@
-import boom from 'boom';
-import { Response } from 'express';
+import { Context } from 'koa';
 
 import TransactionModel from '@/models/Transactions';
 
@@ -9,23 +8,23 @@ import {
   ITransactionRequest,
 } from '@/@types/models/Transaction';
 
-const create = (req: ITransactionRequest, res: Response) => {
-  if (req.body) {
+const create = (ctx: Context) => {
+  if (ctx.request.body) {
     TransactionModel.create(
       //  @ts-ignore
       new TransactionDto({
-        ...req.body,
-        userId: req.params.userId,
+        ...ctx.request.body,
+        userId: ctx.request.query.userId,
       })
     )
       .then((data: ITransactionInterface) => {
-        return res.send(data);
+        return (ctx.data = data);
       })
-      .catch((err) => res.json(boom.notFound(err)));
+      .catch((err) => ctx.throw(err));
   }
 };
 
-const get = (req: ITransactionRequest, res: Response) => {
+const get = (ctx: Context) => {
   const userId = req.params.userId;
 
   //  @ts-ignore
@@ -46,7 +45,7 @@ const get = (req: ITransactionRequest, res: Response) => {
     .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
-const getAll = (req: ITransactionRequest, res: Response) => {
+const getAll = (ctx: Context) => {
   const userId = req.params.userId;
 
   return TransactionModel.find({ userId })
@@ -58,7 +57,7 @@ const getAll = (req: ITransactionRequest, res: Response) => {
     .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
-const remove = (req: ITransactionRequest, res: Response) => {
+const remove = (ctx: Context) => {
   return TransactionModel.findOneAndRemove({ _id: req.params.transactionId })
     .then((data: ITransactionInterface) => {
       if (data) {
@@ -70,7 +69,7 @@ const remove = (req: ITransactionRequest, res: Response) => {
     .catch((err: Error) => res.json(boom.notFound(`${err}`)));
 };
 
-const update = (req: ITransactionRequest, res: Response) => {
+const update = (ctx: Context) => {
   return TransactionModel.findOneAndUpdate(
     { _id: req.params.transactionId },
     {

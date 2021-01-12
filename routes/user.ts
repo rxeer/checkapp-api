@@ -1,45 +1,31 @@
-import { Request, Response } from 'express';
-import promiseRouter from 'express-promise-router';
-import { body } from 'express-validator/check';
+import { Context } from 'koa';
+import Router from 'koa-router';
 
-import auth from './auth';
 import userController from '@/controllers/user.controller';
 
-const router = promiseRouter();
+var router = new Router({
+  prefix: '/users',
+});
 
 router
-  .route('/login')
   .post(
-    [
-      body('email').isEmail().withMessage('Email is not valid'),
-      body('password').exists(),
-    ],
-    auth.optional,
+    '/login',
     userController.login
   );
 
 router
-  .route('/register')
   .post(
-    [
-      body('email').isEmail().exists().withMessage('Email is not valid'),
-      body('password').exists(),
-      body('firstName').exists(),
-      body('lastName').exists(),
-    ],
-    auth.optional,
+    '/register',
     userController.register
-  );
+);
 
-//  @ts-ignore
-router.route('/').put([], auth.required, userController.update);
+router.put('/' userController.update);
 
-//  @ts-ignore
-router.route('/current').get(auth.required, userController.getCurrent);
+router.get('/current', userController.getCurrent);
 
-router.route('/logout').post((req: Request, res: Response) => {
-  req.logout();
-  res.redirect('/');
+router.post('/logout', (ctx: Context) => {
+  ctx.logout();
+  ctx.redirect('/');
 });
 
 export default router;
