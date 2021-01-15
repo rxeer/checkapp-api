@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IncomeInterface } from '@/@types/models/Incomes';
 
 const incomeSchema: Schema = new Schema({
@@ -6,7 +6,7 @@ const incomeSchema: Schema = new Schema({
   date: { type: Date, default: Date.now() },
   createdAt: { type: Date, default: Date.now },
   userId: {
-    type: Types.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: 'User',
   },
   type: { type: String, required: true },

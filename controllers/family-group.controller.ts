@@ -6,7 +6,7 @@ import {
   FamilyGroupDto,
 } from '@/@types/models/FamilyGroup';
 
-const get = (ctx: Context): Promise<void> => {
+const get = (ctx: Context) => {
   const userId = ctx.request.query.userId;
 
   return FamilyGroupModel.find({ userId })

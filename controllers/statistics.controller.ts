@@ -1,13 +1,11 @@
-import boom from 'boom';
-import { Response } from 'express';
+import { Context } from 'koa';
 
 import { IncomeStatisticDto } from '@/@types/models/Statistics';
 import IncomeModel from '@/models/Incomes';
 import { IncomeInterface } from '@/@types/models/Incomes';
-import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
-const getIncome = (req: IGetUserAuthInfoRequest, res: Response) => {
-  const userId = req.payload.id;
+const getIncome = (ctx: Context) => {
+  const userId = ctx.user.id;
   return IncomeModel.find()
     .sort({ created_at: 'desc' })
     .exec()
@@ -21,16 +19,14 @@ const getIncome = (req: IGetUserAuthInfoRequest, res: Response) => {
         return a + item;
       }, 0);
 
-      res.json(
-        new IncomeStatisticDto({
-          userId,
-          data: dataList,
-          labels: dataLabels,
-          total: totalIncome,
-        })
-      );
+      ctx.body = new IncomeStatisticDto({
+        userId,
+        data: dataList,
+        labels: dataLabels,
+        total: totalIncome,
+      });
     })
-    .catch((err: Error) => res.json(boom.notFound(`${err}`)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
 export default {

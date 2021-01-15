@@ -1,32 +1,16 @@
-import auth from './auth';
+import Router from 'koa-router';
 import incomesController from '@/controllers/incomes.controller';
 
-const router = promiseRouter();
+var router = new Router({
+  prefix: '/users',
+});
 
 router
-  .route('/:userId/incomes')
-  .post(
-    [
-      body('date').exists(),
-      body('type').exists(),
-      body('income').exists(),
-      body('description').isString().exists(),
-    ],
-    auth.required,
-    //  @ts-ignore
-    incomesController.create
-  )
-  .get(auth.required, incomesController.get);
+  .post('/:userId/incomes', incomesController.create)
+  .get('/:userId/incomes', incomesController.get);
 
 router
-  .route('/:userId/incomes/:incomeId')
-  //  @ts-ignore
-  .put([param('incomeId').isMongoId()], auth.required, incomesController.update)
-  .delete(
-    [param('incomeId').isMongoId()],
-    auth.required,
-    //  @ts-ignore
-    incomesController.remove
-  );
+  .put('/:userId/incomes/:incomeId', incomesController.update)
+  .delete('/:userId/incomes/:incomeId', incomesController.remove);
 
 export default router;

@@ -1,13 +1,13 @@
 import config from 'config';
-import jwt from 'express-jwt';
-import { Request } from 'express';
+import jwt from 'koa-jwt';
+import Koa, { Context } from 'koa';
 
 const authSecret: string = config.get('auth.secret');
 
-const getTokenFromHeaders = (req: Request) => {
+const getTokenFromHeaders = (ctx: Context) => {
   const {
     headers: { authorization },
-  } = req;
+  } = ctx.request;
 
   if (authorization && authorization.split(' ')[0] === 'Bearer') {
     return authorization.split(' ')[1];
@@ -19,15 +19,16 @@ const getTokenFromHeaders = (req: Request) => {
 const auth = {
   required: jwt({
     secret: authSecret,
-    userProperty: 'payload',
     getToken: getTokenFromHeaders,
   }),
   optional: jwt({
     secret: authSecret,
-    userProperty: 'payload',
     getToken: getTokenFromHeaders,
-    credentialsRequired: false,
   }),
+};
+
+export const configureAuth = (app: Koa) => {
+  app.use(jwt({ secret: authSecret }));
 };
 
 export default auth;

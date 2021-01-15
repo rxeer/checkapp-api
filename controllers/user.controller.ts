@@ -41,14 +41,10 @@ const register = (ctx: Context) => {
 };
 
 const getCurrent = (ctx: Context) => {
-  const {
-    payload: { id },
-  } = ctx;
-
   //  @ts-ignore
-  return UserModel.getById(id).then((user: UserDto) => {
+  return UserModel.getById(ctx.user.id).then((user: UserDto) => {
     if (!user) {
-      throw boom.notFound('User not found');
+      ctx.throw('User not found');
     }
     //  @ts-ignore
     return res.json(new UserDto({ ...user._doc, id }));
@@ -60,7 +56,7 @@ const update = (ctx: Context) => {
     ...ctx.request.body,
   };
   return UserModel.findOneAndUpdate(
-    { _id: ctx.request.payload.id },
+    { _id: ctx.user.id },
     //  @ts-ignore
     { $set: new UserDto(newData) },
     { new: true }

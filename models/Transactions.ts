@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 //  @ts-ignore
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { ITransactionInterface } from '@/@types/models/Transaction';
@@ -7,13 +7,13 @@ const transactionSchema: Schema = new Schema({
   description: { type: String, required: false, default: '' },
   count: { type: Number, required: true },
   userId: {
-    type: Types.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: 'User',
     required: true,
   },
   category: {
     id: {
-      type: Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: 'Category',
       required: true,
     },
@@ -21,7 +21,7 @@ const transactionSchema: Schema = new Schema({
   },
   familyGroup: {
     id: {
-      type: Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: 'FamilyGroup',
       required: true,
     },

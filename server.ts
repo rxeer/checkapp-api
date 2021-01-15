@@ -13,6 +13,7 @@ import Koa from 'koa';
 import setAppRoutes from './routes';
 
 import {
+  configureAuth,
   configureAdmin,
   configureLogger,
   configureConnection,
@@ -36,9 +37,10 @@ app.use(
     },
   })
 );
-app.use(koa404Handler());
+app.use(koa404Handler);
 app.context.onerror = errorHandler();
 
+configureAuth(app);
 setAppRoutes(app);
 configureAdmin(app);
 
