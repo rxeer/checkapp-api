@@ -8,7 +8,7 @@ import {
 } from '@/@types/models/UserCategory';
 
 const get = (ctx: Context) => {
-  const userId = ctx.reqest.query.userId;
+  const userId = ctx.request.query.userId;
 
   return UserCategoryModel.find({ userId })
     .sort({ created_at: 'desc' })
@@ -20,10 +20,11 @@ const get = (ctx: Context) => {
 };
 
 const create = (ctx: Context) => {
-  const userId = ctx.reqest.query.userId;
+  const userId = ctx.request.query.userId;
 
+  console.log('userId', userId)
   return UserCategoryModel.create({
-    ...ctx.reqest.body,
+    ...ctx.request.body,
     userId,
   })
     .then((data: IUserCategoryInterface) => {
@@ -33,17 +34,17 @@ const create = (ctx: Context) => {
 };
 
 const remove = (ctx: Context) => {
-  return UserCategoryModel.findOne({ _id: ctx.reqest.query.categoryId })
+  return UserCategoryModel.findOne({ _id: ctx.request.query.categoryId })
     .then((data: IUserCategoriesRequest) => {
       return UserCategoryModel.findOneAndUpdate(
-        { _id: ctx.reqest.query.categoryId },
+        { _id: ctx.request.query.categoryId },
         //  @ts-ignore
         { $set: new IUserCategoryDto({ ...data._doc, active: false }) },
         { new: true }
       )
         .then((category: IUserCategoryInterface) => {
           if (category) {
-            ctx.body = { id: ctx.reqest.query.categoryId };
+            ctx.body = { id: ctx.request.query.categoryId };
           } else {
             ctx.throw('Category not found');
           }
@@ -54,10 +55,10 @@ const remove = (ctx: Context) => {
 };
 
 const update = (ctx: Context) => {
-  const userId = ctx.reqest.query.userId;
+  const userId = ctx.request.query.userId;
 
   return UserCategoryModel.findOneAndUpdate(
-    { _id: ctx.reqest.query.categoryId },
+    { _id: ctx.request.query.categoryId },
     { $set: { ...ctx.request.body, userId, active: true } },
     { new: true }
   )

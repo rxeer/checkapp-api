@@ -23,7 +23,7 @@ import './authentication';
 
 const app = new Koa();
 
-app.use(cors());
+app.use(cors({ credentials: true }));
 app.use(compress());
 configureLogger(app);
 configureConnection();
@@ -43,8 +43,6 @@ app.context.onerror = errorHandler();
 configureAuth(app);
 setAppRoutes(app);
 configureAdmin(app);
-
-//  app.use('/api/v1', router);
 
 if (config.has('port')) {
   const appPort: string = config.get('port');

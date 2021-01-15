@@ -3,7 +3,7 @@ import Router from 'koa-router';
 import transactionsController from '@/controllers/transactions.controller';
 
 var router = new Router({
-  prefix: '/users',
+  prefix: '/api/v1/users',
 });
 
 router

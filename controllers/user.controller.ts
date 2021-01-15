@@ -41,13 +41,14 @@ const register = (ctx: Context) => {
 };
 
 const getCurrent = (ctx: Context) => {
+  const userId = ctx.state?.user?.id;
   //  @ts-ignore
-  return UserModel.getById(ctx.user.id).then((user: UserDto) => {
+  return UserModel.getById(userId).then((user: UserDto) => {
     if (!user) {
       ctx.throw('User not found');
     }
     //  @ts-ignore
-    return res.json(new UserDto({ ...user._doc, id }));
+    return ctx.body = new UserDto({ ...user._doc, id: userId });
   });
 };
 
@@ -55,8 +56,10 @@ const update = (ctx: Context) => {
   const newData = {
     ...ctx.request.body,
   };
+  const userId = ctx.state?.user?.id;
+
   return UserModel.findOneAndUpdate(
-    { _id: ctx.user.id },
+    { _id: userId },
     //  @ts-ignore
     { $set: new UserDto(newData) },
     { new: true }
@@ -64,7 +67,7 @@ const update = (ctx: Context) => {
     .then((user: IUserInterface) => {
       if (user) {
         //  @ts-ignore
-        return res.json(new UserDto({ ...user._doc, id: req.payload.id }));
+        return ctx.body = new UserDto({ ...user._doc, id: userId });
       } else {
         ctx.throw('User not found');
       }

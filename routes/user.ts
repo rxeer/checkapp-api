@@ -4,7 +4,7 @@ import Router from 'koa-router';
 import userController from '@/controllers/user.controller';
 
 var router = new Router({
-  prefix: '/users',
+  prefix: '/api/v1/users',
 });
 
 router.post('/login', userController.login);

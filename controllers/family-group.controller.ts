@@ -15,7 +15,9 @@ const get = (ctx: Context) => {
     .then((data: IFamilyGroupInterface[]) => {
       ctx.body = data;
     })
-    .catch((err: Error) => ctx.throw(err));
+    .catch((err: Error) => {
+      ctx.body = ctx.request.query;
+    });
 };
 
 const create = (ctx: Context) => {
