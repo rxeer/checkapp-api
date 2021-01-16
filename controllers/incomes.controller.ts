@@ -29,7 +29,9 @@ const create = (ctx: Context) => {
 };
 
 const remove = (ctx: Context) => {
-  return IncomeModel.findOneAndRemove({ _id: ctx.request.query.incomeId })
+  const incomeId = ctx.params.incomeId;
+
+  return IncomeModel.findOneAndRemove({ _id: incomeId })
     .then((data: IncomeInterface) => {
       if (data) {
         ctx.body = { id: data._id };
@@ -41,12 +43,15 @@ const remove = (ctx: Context) => {
 };
 
 const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const incomeId = ctx.params.incomeId;
+
   const newData = {
     ...ctx.request.body,
-    userId: ctx.request.query.userId,
+    userId,
   };
   return IncomeModel.findOneAndUpdate(
-    { _id: ctx.request.query.incomeId },
+    { _id: incomeId },
     //  @ts-ignore
     { $set: new IncomeDto(newData) },
     { new: true }
