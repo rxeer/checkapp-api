@@ -7,7 +7,7 @@ import {
 } from '@/@types/models/FamilyGroup';
 
 const get = (ctx: Context) => {
-  const userId = ctx.request.query.userId;
+  const userId = ctx.params.userId;
 
   return FamilyGroupModel.find({ userId })
     .sort({ created_at: 'desc' })
@@ -21,9 +21,11 @@ const get = (ctx: Context) => {
 };
 
 const create = (ctx: Context) => {
+  const userId = ctx.params.userId;
+
   return FamilyGroupModel.create({
     ...ctx.request.body,
-    userId: ctx.request.query.userId,
+    userId,
   })
     .then((data: IFamilyGroupInterface) => {
       ctx.body = data;
@@ -32,10 +34,12 @@ const create = (ctx: Context) => {
 };
 
 const remove = (ctx: Context) => {
-  return FamilyGroupModel.findOne({ _id: ctx.request.query.familyId })
+  const familyId = ctx.params.familyId;
+
+  return FamilyGroupModel.findOne({ _id: familyId })
     .then((data: IFamilyGroupInterface) => {
       return FamilyGroupModel.findOneAndUpdate(
-        { _id: ctx.request.query.familyId },
+        { _id: familyId },
         //  @ts-ignore
         { $set: new FamilyGroupDto({ ...data._doc, active: false }) },
         { new: true }
@@ -44,6 +48,7 @@ const remove = (ctx: Context) => {
           if (familyGroup) {
             ctx.body = { id: familyGroup.id };
           } else {
+            ctx.status = 404;
             ctx.throw('Family group not found');
           }
         })
@@ -53,13 +58,17 @@ const remove = (ctx: Context) => {
 };
 
 const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const familyId = ctx.params.familyId;
+
   const newData = {
     ...ctx.request.body,
     active: true,
-    userId: ctx.router.userId,
+    userId,
   };
+
   return FamilyGroupModel.findOneAndUpdate(
-    { _id: ctx.request.query.familyId },
+    { _id: familyId },
     //  @ts-ignore
     { $set: new FamilyGroupDto(newData) },
     { new: true }

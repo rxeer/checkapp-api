@@ -2,7 +2,7 @@ import Router from 'koa-router';
 
 import transactionsController from '@/controllers/transactions.controller';
 
-var router = new Router({
+const router = new Router({
   prefix: '/api/v1/users',
 });
 

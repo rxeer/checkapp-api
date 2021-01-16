@@ -4,7 +4,7 @@ import IncomeModel from '@/models/Incomes';
 import { IncomeInterface, IncomeDto } from '@/@types/models/Incomes';
 
 const get = (ctx: Context) => {
-  const userId = ctx.request.query.userId;
+  const userId = ctx.params.userId;
 
   return IncomeModel.find({ userId })
     .sort({ created_at: 'desc' })
@@ -16,9 +16,11 @@ const get = (ctx: Context) => {
 };
 
 const create = (ctx: Context) => {
+  const userId = ctx.params.userId;
+
   return IncomeModel.create({
     ...ctx.request.body,
-    userId: ctx.request.query.userId,
+    userId,
   })
     .then((data: IncomeInterface) => {
       ctx.body = data;

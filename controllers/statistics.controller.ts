@@ -5,7 +5,7 @@ import IncomeModel from '@/models/Incomes';
 import { IncomeInterface } from '@/@types/models/Incomes';
 
 const getIncome = (ctx: Context) => {
-  const userId = ctx.user.id;
+  const userId = ctx.state.user.id;
   return IncomeModel.find()
     .sort({ created_at: 'desc' })
     .exec()

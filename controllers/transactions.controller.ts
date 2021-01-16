@@ -9,11 +9,11 @@ import {
 
 const create = (ctx: Context) => {
   if (ctx.request.body) {
-    TransactionModel.create(
+    return TransactionModel.create(
       //  @ts-ignore
       new TransactionDto({
         ...ctx.request.body,
-        userId: ctx.request.query.userId,
+        userId: ctx.params.userId,
       })
     )
       .then((data: ITransactionInterface) => {
@@ -24,14 +24,13 @@ const create = (ctx: Context) => {
 };
 
 const get = (ctx: Context) => {
-  const userId = ctx.request.query.userId;
-
+  const userId = ctx.params.userId;
   //  @ts-ignore
   return TransactionModel.paginate(
     { userId },
     {
-      page: ctx.request.query.page,
-      limit: ctx.request.query.limit,
+      page: ctx.query.page || 1,
+      limit: ctx.query.limit || 10,
       sort: { createdDate: 'desc' },
       customLabels: {
         docs: 'list',
@@ -45,7 +44,7 @@ const get = (ctx: Context) => {
 };
 
 const getAll = (ctx: Context) => {
-  const userId = ctx.request.query.userId;
+  const userId = ctx.params.userId;
 
   return TransactionModel.find({ userId })
     .sort({ created_at: 'desc' })
@@ -57,8 +56,10 @@ const getAll = (ctx: Context) => {
 };
 
 const remove = (ctx: Context) => {
+  const transactionId = ctx.params.transactionId;
+
   return TransactionModel.findOneAndRemove({
-    _id: ctx.request.query.transactionId,
+    _id: transactionId,
   })
     .then((data: ITransactionInterface) => {
       if (data) {
@@ -71,13 +72,16 @@ const remove = (ctx: Context) => {
 };
 
 const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const transactionId = ctx.params.transactionId;
+
   return TransactionModel.findOneAndUpdate(
-    { _id: ctx.request.query.transactionId },
+    { _id: transactionId },
     {
       //   @ts-ignore
       $set: new TransactionDto({
         ...ctx.request.body,
-        userId: ctx.request.query.userId,
+        userId,
       }),
     },
     { new: true }

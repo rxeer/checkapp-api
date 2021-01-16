@@ -3,7 +3,7 @@ import Router from 'koa-router';
 
 import userController from '@/controllers/user.controller';
 
-var router = new Router({
+const router = new Router({
   prefix: '/api/v1/users',
 });
 

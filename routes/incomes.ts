@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 import incomesController from '@/controllers/incomes.controller';
 
-var router = new Router({
+const router = new Router({
   prefix: '/api/v1/users',
 });
 

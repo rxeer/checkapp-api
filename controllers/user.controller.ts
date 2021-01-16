@@ -35,8 +35,8 @@ const register = (ctx: Context) => {
   return finalUser
     .save()
     .then(() => (ctx.body = finalUser.toAuthJSON()))
-    .catch(() => {
-      ctx.throw('User already exist');
+    .catch((err) => {
+      ctx.throw(err);
     });
 };
 
@@ -48,7 +48,7 @@ const getCurrent = (ctx: Context) => {
       ctx.throw('User not found');
     }
     //  @ts-ignore
-    return ctx.body = new UserDto({ ...user._doc, id: userId });
+    return (ctx.body = new UserDto({ ...user._doc, id: userId }));
   });
 };
 
@@ -67,7 +67,7 @@ const update = (ctx: Context) => {
     .then((user: IUserInterface) => {
       if (user) {
         //  @ts-ignore
-        return ctx.body = new UserDto({ ...user._doc, id: userId });
+        return (ctx.body = new UserDto({ ...user._doc, id: userId }));
       } else {
         ctx.throw('User not found');
       }

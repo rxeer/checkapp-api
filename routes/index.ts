@@ -17,7 +17,17 @@ const setAppRoutes = (app: Koa) => {
   app.use(familyGroupRoutes.routes());
   app.use(transactionsRoutes.routes());
   app.use(userCategoriesRoutes.routes());
-  app.use(router.allowedMethods());
+  app.use(
+    router.allowedMethods({
+      throw: true,
+      notImplemented: () => {
+        throw new Error('Not Implemented');
+      },
+      methodNotAllowed: () => {
+        throw new Error('Method Not Allowed');
+      },
+    })
+  );
 };
 
 export default setAppRoutes;
