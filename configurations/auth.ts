@@ -9,7 +9,7 @@ export const configureAuth = (app: Koa) => {
     jwt({
       secret: authSecret,
     }).unless({
-      path: [/^\/public/, /^\/admin/, /register/, /login/],
+      path: [/^\/public/, /^\/admin/, /register/, /login/, /api-docs/],
     })
   );
 };

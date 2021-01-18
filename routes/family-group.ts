@@ -3,7 +3,7 @@ import Router from 'koa-router';
 import familyGroupController from '@/controllers/family-group.controller';
 
 const router = new Router({
-  prefix: '/api/v1/users',
+  prefix: '/users',
 });
 
 router

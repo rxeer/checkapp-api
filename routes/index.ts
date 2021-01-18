@@ -8,7 +8,9 @@ import familyGroupRoutes from './family-group';
 import transactionsRoutes from './transactions';
 import userCategoriesRoutes from './user-categories';
 
-const router = new Router();
+const router = new Router({
+  prefix: '/api/v1'
+});
 
 const setAppRoutes = (app: Koa) => {
   app.use(userRoutes.routes());

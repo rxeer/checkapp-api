@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import incomesController from '@/controllers/incomes.controller';
 
 const router = new Router({
-  prefix: '/api/v1/users',
+  prefix: '/users',
 });
 
 router
