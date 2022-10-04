@@ -8,7 +8,6 @@ const router = new Router();
 const spec = yamljs.load(path.resolve('./.openapi.yaml'));
 
 export const configureApiDocs = (app: Koa) => {
-    console.log('asdasdasdasdasdasdasdasdasdasdsa')
   router.get('/api-docs',  koaSwagger({
     routePrefix: false,
     swaggerOptions: { spec }

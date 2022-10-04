@@ -61,7 +61,7 @@ const remove = (ctx: Context) => {
   return TransactionModel.findOneAndRemove({
     _id: transactionId,
   })
-    .then((data: ITransactionInterface) => {
+    .then((data: any) => {
       if (data) {
         ctx.body = { id: data._id };
       } else {
@@ -87,7 +87,7 @@ const update = (ctx: Context) => {
     { new: true }
   )
 
-    .then((data: ITransactionInterface) => {
+    .then((data: any) => {
       if (data) {
         ctx.body = data;
       } else {

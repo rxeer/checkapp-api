@@ -32,7 +32,7 @@ const remove = (ctx: Context) => {
   const incomeId = ctx.params.incomeId;
 
   return IncomeModel.findOneAndRemove({ _id: incomeId })
-    .then((data: IncomeInterface) => {
+    .then((data: any) => {
       if (data) {
         ctx.body = { id: data._id };
       } else {
@@ -56,7 +56,7 @@ const update = (ctx: Context) => {
     { $set: new IncomeDto(newData) },
     { new: true }
   )
-    .then((data: IncomeInterface) => {
+    .then((data: any) => {
       if (data) {
         ctx.body = data;
       } else {

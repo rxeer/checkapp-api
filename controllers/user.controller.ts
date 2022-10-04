@@ -64,7 +64,7 @@ const update = (ctx: Context) => {
     { $set: new UserDto(newData) },
     { new: true }
   )
-    .then((user: IUserInterface) => {
+    .then((user: any) => {
       if (user) {
         //  @ts-ignore
         return (ctx.body = new UserDto({ ...user._doc, id: userId }));

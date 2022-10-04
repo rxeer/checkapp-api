@@ -36,14 +36,14 @@ const remove = (ctx: Context) => {
   const categoryId = ctx.params.categoryId;
 
   return UserCategoryModel.findOne({ _id: categoryId })
-    .then((data: IUserCategoriesRequest) => {
+    .then((data: any) => {
       return UserCategoryModel.findOneAndUpdate(
         { _id: categoryId },
         //  @ts-ignore
         { $set: new IUserCategoryDto({ ...data._doc, active: false }) },
         { new: true }
       )
-        .then((category: IUserCategoryInterface) => {
+        .then((category: any) => {
           if (category) {
             ctx.body = { id: categoryId };
           } else {
@@ -65,7 +65,7 @@ const update = (ctx: Context) => {
     { new: true }
   )
 
-    .then((data: IUserCategoriesRequest) => {
+    .then((data: any) => {
       if (data) {
         ctx.body = data;
       } else {

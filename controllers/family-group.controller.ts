@@ -37,14 +37,14 @@ const remove = (ctx: Context) => {
   const familyId = ctx.params.familyId;
 
   return FamilyGroupModel.findOne({ _id: familyId })
-    .then((data: IFamilyGroupInterface) => {
+    .then((data: any) => {
       return FamilyGroupModel.findOneAndUpdate(
         { _id: familyId },
         //  @ts-ignore
         { $set: new FamilyGroupDto({ ...data._doc, active: false }) },
         { new: true }
       )
-        .then((familyGroup: IFamilyGroupInterface) => {
+        .then((familyGroup: any) => {
           if (familyGroup) {
             ctx.body = { id: familyGroup.id };
           } else {
@@ -73,7 +73,7 @@ const update = (ctx: Context) => {
     { $set: new FamilyGroupDto(newData) },
     { new: true }
   )
-    .then((data: IFamilyGroupInterface) => {
+    .then((data: any) => {
       if (data) {
         ctx.body = data;
       } else {
