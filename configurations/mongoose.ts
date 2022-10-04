@@ -7,8 +7,6 @@ export const configureConnection = (options: any = {}) => {
 
     //  @ts-ignore
     mongoose.Promise = Promise;
-    mongoose.set('useCreateIndex', true);
-    mongoose.set('useFindAndModify', false);
 
     mongoose.connect(dbHost, {
       useNewUrlParser: true,

@@ -1,25 +1,34 @@
 import crypto from 'crypto';
 import config from 'config';
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import randtoken from 'rand-token';
 import uniqueValidator from 'mongoose-unique-validator';
 
 import { IUserInterface } from '@/@types/models';
 
-const { Schema } = mongoose;
-const userSchema = new Schema({
+const userSchema: Schema = new Schema({
+  //  @ts-ignore
   role: {
     type: String,
     default: 'USER',
   },
+  //  @ts-ignore
   hash: String,
+  //  @ts-ignore
   salt: String,
+  //  @ts-ignore
   firstName: { type: String },
+  //  @ts-ignore
   lastName: { type: String },
+  //  @ts-ignore
   currency: { type: String },
+  //  @ts-ignore
   avatar: { type: String },
+  //  @ts-ignore
   onboardCompleted: { type: Boolean, default: false },
+  //  @ts-ignore
+
   createdAt: { type: Date, default: Date.now },
   email: { type: String, require: true, unique: true },
 });
