@@ -11,7 +11,7 @@ const familyGroupSchema: Schema = new Schema({
     ref: 'User',
   },
   active: { type: Boolean, default: true },
-  description: { type: String, default: '', required: true },
+  description: { type: String, default: '', required: false },
 });
 
 familyGroupSchema.plugin(uniqueValidator, {
