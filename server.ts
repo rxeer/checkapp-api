@@ -25,7 +25,7 @@ import './authentication';
 
 const app = new Koa();
 
-app.use(cors({ credentials: true }));
+app.use(cors());
 app.use(compress());
 app.use(helmet());
 configureLogger(app);
