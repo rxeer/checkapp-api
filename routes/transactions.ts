@@ -1,46 +1,21 @@
-import promiseRouter from 'express-promise-router';
-import { body, param } from 'express-validator/check';
+import Router from 'koa-router';
 
-import auth from './auth';
 import transactionsController from '@/controllers/transactions.controller';
 
-const router = promiseRouter();
-
-//  @ts-ignore
-router
-  .route('/:userId/transactions')
-  .post(
-    [
-      body('createdDate').isString().exists(),
-      body('count').isString().exists(),
-      body('category').exists(),
-      body('familyGroup').exists(),
-    ],
-    auth.required,
-    transactionsController.create
-  );
+const router = new Router({
+  prefix: '/users',
+});
 
 router
-  .route('/:userId/transactions')
-  //  @ts-ignore
-  .get(auth.required, transactionsController.get);
+  .post('/:userId/transactions', transactionsController.create)
+  .get('/:userId/transactions', transactionsController.get);
+
+router.get('/:userId/transactions/statistic', transactionsController.getAll);
 
 router
-  .route('/:userId/transactions/statistic')
-  //  @ts-ignore
-  .get(auth.required, transactionsController.getAll);
-
-//  @ts-ignore
-router
-  .route('/:userId/transactions/:transactionId')
-  .put(
-    [param('transactionId').isMongoId()],
-    auth.required,
-    transactionsController.update
-  )
+  .put('/:userId/transactions/:transactionId', transactionsController.update)
   .delete(
-    [param('transactionId').isMongoId()],
-    auth.required,
+    '/:userId/transactions/:transactionId',
     transactionsController.remove
   );
 

@@ -1,54 +1,55 @@
 import './moduleAlias';
 
-import boom from 'boom';
+import Koa from 'koa';
 import config from 'config';
-import passport from 'passport';
-import bodyParser from 'body-parser';
-import express, { Request, Response, Application, NextFunction } from 'express';
+import cors from '@koa/cors';
+import helmet from 'koa-helmet';
+import bodyParser from 'koa-body';
+import compress from 'koa-compress';
+//  @ts-ignore
+import errorHandler from 'koa-better-error-handler';
+//  @ts-ignore
+import koa404Handler from 'koa-404-handler';
 
-import router from './routes';
+import setAppRoutes from './routes';
 
 import {
-  configureCors,
+  configureAuth,
+  configureAdmin,
   configureLogger,
+  configureApiDocs,
   configureConnection,
 } from './configurations';
 
 import './authentication';
 
-const app: Application = express();
+const app = new Koa();
 
-configureCors(app);
+app.use(cors({ credentials: true }));
+app.use(compress());
+app.use(helmet());
 configureLogger(app);
+configureApiDocs(app);
 configureConnection();
-app.use(express.json());
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(passport.initialize());
-
-app.use('/api/v1', router);
-
-app.get(
-  '*',
-  wrapAsync(async (req: Request, res: Response) => {
-    await new Promise((resolve) => setTimeout(() => resolve(), 50));
-    throw new Error('Something was swrong');
+app.use(
+  bodyParser({
+    multipart: true,
+    urlencoded: true,
+    formidable: {
+      uploadDir: './uploads',
+      maxFileSize: 20000,
+    },
   })
 );
+app.use(koa404Handler);
+app.context.onerror = errorHandler();
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  res.json(boom.notFound(error.message));
-});
+configureAuth(app);
+setAppRoutes(app);
+configureAdmin(app);
 
 if (config.has('port')) {
   const appPort: string = config.get('port');
 
   app.listen(process.env.PORT || appPort);
-}
-
-function wrapAsync(fn: any) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch(next);
-  };
 }

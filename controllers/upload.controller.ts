@@ -1,8 +1,9 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { IGetUserAuthInfoRequest } from '@/@types/models/General';
 
-const uploadAvatar = async (req: IGetUserAuthInfoRequest, res: Response) => {
+const uploadAvatar = async (req: Request, res: Response) => {
   const {
+    //  @ts-ignore
     payload: { id },
   } = req;
   //  @ts-ignore

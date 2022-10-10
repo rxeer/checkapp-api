@@ -1,79 +1,87 @@
-import boom from 'boom';
-import { Request, Response } from 'express';
-import omit from 'lodash/omit';
-import toPlainObject from 'lodash/toPlainObject';
+import { Context } from 'koa';
 
 import FamilyGroupModel from '@/models/FamilyGroup';
 import {
   IFamilyGroupInterface,
-  IFamilyGroupRequest,
   FamilyGroupDto,
 } from '@/@types/models/FamilyGroup';
 
-const get = (req: Request, res: Response) => {
-  const userId = req.params.userId;
+const get = (ctx: Context) => {
+  const userId = ctx.params.userId;
 
   return FamilyGroupModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: IFamilyGroupInterface[]) => {
-      res.json(data);
+      ctx.body = data;
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => {
+      ctx.body = ctx.request.query;
+    });
 };
 
-const create = (req: IFamilyGroupRequest, res: Response) => {
+const create = (ctx: Context) => {
+  const userId = ctx.params.userId;
+
   return FamilyGroupModel.create({
-    ...req.body,
-    userId: req.params.userId,
+    ...ctx.request.body,
+    userId,
   })
     .then((data: IFamilyGroupInterface) => {
-      return res.send(omit(toPlainObject(data), 'userId'));
+      ctx.body = data;
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const remove = (req: IFamilyGroupRequest, res: Response) => {
-  return FamilyGroupModel.findOne({ _id: req.params.familyId })
-    .then((data) => {
+const remove = (ctx: Context) => {
+  const familyId = ctx.params.familyId;
+
+  return FamilyGroupModel.findOne({ _id: familyId })
+    .then((data: any) => {
       return FamilyGroupModel.findOneAndUpdate(
-        { _id: req.params.familyId },
+        { _id: familyId },
         //  @ts-ignore
         { $set: new FamilyGroupDto({ ...data._doc, active: false }) },
         { new: true }
       )
-        .then((familyGroup) => {
+        .then((familyGroup: any) => {
           if (familyGroup) {
-            res.send({ id: req.params.familyId });
+            ctx.body = { id: familyGroup.id };
           } else {
-            res.json(boom.notFound('Family group not found'));
+            ctx.status = 404;
+            ctx.throw('Family group not found');
           }
         })
-        .catch((err) => res.json(boom.notFound(err)));
+        .catch((err: Error) => ctx.throw(err));
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const update = (req: IFamilyGroupRequest, res: Response) => {
+const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const familyId = ctx.params.familyId;
+
   const newData = {
-    ...req.body,
+    ...ctx.request.body,
     active: true,
-    userId: req.params.userId,
+    userId,
   };
+
   return FamilyGroupModel.findOneAndUpdate(
-    { _id: req.params.familyId },
+    { _id: familyId },
     //  @ts-ignore
     { $set: new FamilyGroupDto(newData) },
     { new: true }
   )
-    .then((data) => {
+    .then((data: any) => {
       if (data) {
-        res.send(data);
+        ctx.body = data;
       } else {
-        res.json(boom.notFound('Family group not found'));
+        ctx.status = 404;
+        ctx.throw('Family group not found');
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
 export default {

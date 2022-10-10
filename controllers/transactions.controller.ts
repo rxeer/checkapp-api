@@ -1,39 +1,36 @@
-import boom from 'boom';
-import { Response } from 'express';
+import { Context } from 'koa';
 
 import TransactionModel from '@/models/Transactions';
 
 import {
   TransactionDto,
   ITransactionInterface,
-  ITransactionRequest,
 } from '@/@types/models/Transaction';
 
-const create = (req: ITransactionRequest, res: Response) => {
-  if (req.body) {
-    TransactionModel.create(
+const create = (ctx: Context) => {
+  if (ctx.request.body) {
+    return TransactionModel.create(
       //  @ts-ignore
       new TransactionDto({
-        ...req.body,
-        userId: req.params.userId,
+        ...ctx.request.body,
+        userId: ctx.params.userId,
       })
     )
       .then((data: ITransactionInterface) => {
-        return res.send(data);
+        ctx.body = data;
       })
-      .catch((err) => res.json(boom.notFound(err)));
+      .catch((err) => ctx.throw(err));
   }
 };
 
-const get = (req: ITransactionRequest, res: Response) => {
-  const userId = req.params.userId;
-
+const get = (ctx: Context) => {
+  const userId = ctx.params.userId;
   //  @ts-ignore
   return TransactionModel.paginate(
     { userId },
     {
-      page: req.query.page,
-      limit: req.query.limit,
+      page: ctx.query.page || 1,
+      limit: ctx.query.limit || 10,
       sort: { createdDate: 'desc' },
       customLabels: {
         docs: 'list',
@@ -41,56 +38,63 @@ const get = (req: ITransactionRequest, res: Response) => {
     }
   )
     .then((data: ITransactionInterface[]) => {
-      res.json(data);
+      ctx.body = data;
     })
-    .catch((err: any) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const getAll = (req: ITransactionRequest, res: Response) => {
-  const userId = req.params.userId;
+const getAll = (ctx: Context) => {
+  const userId = ctx.params.userId;
 
   return TransactionModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: ITransactionInterface[]) => {
-      res.json(data);
+      ctx.body = data;
     })
-    .catch((err: any) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const remove = (req: ITransactionRequest, res: Response) => {
-  return TransactionModel.findOneAndRemove({ _id: req.params.transactionId })
-    .then((data) => {
+const remove = (ctx: Context) => {
+  const transactionId = ctx.params.transactionId;
+
+  return TransactionModel.findOneAndRemove({
+    _id: transactionId,
+  })
+    .then((data: any) => {
       if (data) {
-        res.send({ id: data._id });
+        ctx.body = { id: data._id };
       } else {
-        res.json(boom.notFound('transactionId not found'));
+        ctx.throw('transactionId not found');
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const update = (req: ITransactionRequest, res: Response) => {
+const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const transactionId = ctx.params.transactionId;
+
   return TransactionModel.findOneAndUpdate(
-    { _id: req.params.transactionId },
+    { _id: transactionId },
     {
       //   @ts-ignore
       $set: new TransactionDto({
-        ...req.body,
-        userId: req.params.userId,
+        ...ctx.request.body,
+        userId,
       }),
     },
     { new: true }
   )
 
-    .then((data) => {
+    .then((data: any) => {
       if (data) {
-        res.send(data);
+        ctx.body = data;
       } else {
-        res.json(boom.notFound('transactionId not found'));
+        ctx.throw('transactionId not found');
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
 export default {

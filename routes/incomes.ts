@@ -1,34 +1,16 @@
-import promiseRouter from 'express-promise-router';
-import { body, param } from 'express-validator/check';
-
-import auth from './auth';
+import Router from 'koa-router';
 import incomesController from '@/controllers/incomes.controller';
 
-const router = promiseRouter();
+const router = new Router({
+  prefix: '/users',
+});
 
-//  @ts-ignore
 router
-  .route('/:userId/incomes')
-  .post(
-    [
-      body('date').exists(),
-      body('type').exists(),
-      body('income').exists(),
-      body('description').isString().exists(),
-    ],
-    auth.required,
-    incomesController.create
-  )
-  .get(auth.required, incomesController.get);
+  .post('/:userId/incomes', incomesController.create)
+  .get('/:userId/incomes', incomesController.get);
 
-//  @ts-ignore
 router
-  .route('/:userId/incomes/:incomeId')
-  .put([param('incomeId').isMongoId()], auth.required, incomesController.update)
-  .delete(
-    [param('incomeId').isMongoId()],
-    auth.required,
-    incomesController.remove
-  );
+  .put('/:userId/incomes/:incomeId', incomesController.update)
+  .delete('/:userId/incomes/:incomeId', incomesController.remove);
 
 export default router;

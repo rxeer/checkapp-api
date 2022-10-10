@@ -1,69 +1,69 @@
-import boom from 'boom';
-import { Request, Response } from 'express';
-import omit from 'lodash/omit';
-import toPlainObject from 'lodash/toPlainObject';
+import { Context } from 'koa';
 
 import IncomeModel from '@/models/Incomes';
-import {
-  IncomeInterface,
-  IncomeDto,
-  IIncomesRequest,
-} from '@/@types/models/Incomes';
+import { IncomeInterface, IncomeDto } from '@/@types/models/Incomes';
 
-const get = (req: Request, res: Response) => {
-  const userId = req.params.userId;
+const get = (ctx: Context) => {
+  const userId = ctx.params.userId;
 
   return IncomeModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: IncomeInterface[]) => {
-      res.json(data);
+      ctx.body = data;
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const create = (req: IIncomesRequest, res: Response) => {
+const create = (ctx: Context) => {
+  const userId = ctx.params.userId;
+
   return IncomeModel.create({
-    ...req.body,
-    userId: req.params.userId,
+    ...ctx.request.body,
+    userId,
   })
     .then((data: IncomeInterface) => {
-      return res.send(omit(toPlainObject(data), 'userId'));
+      ctx.body = data;
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const remove = (req: IIncomesRequest, res: Response) => {
-  return IncomeModel.findOneAndRemove({ _id: req.params.incomeId })
-    .then((data) => {
+const remove = (ctx: Context) => {
+  const incomeId = ctx.params.incomeId;
+
+  return IncomeModel.findOneAndRemove({ _id: incomeId })
+    .then((data: any) => {
       if (data) {
-        res.send({ id: data._id });
+        ctx.body = { id: data._id };
       } else {
-        res.json(boom.notFound('Income id not found'));
+        ctx.throw('Income id not found');
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const update = (req: IIncomesRequest, res: Response) => {
+const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const incomeId = ctx.params.incomeId;
+
   const newData = {
-    ...req.body,
-    userId: req.params.userId,
+    ...ctx.request.body,
+    userId,
   };
   return IncomeModel.findOneAndUpdate(
-    { _id: req.params.incomeId },
+    { _id: incomeId },
     //  @ts-ignore
     { $set: new IncomeDto(newData) },
     { new: true }
   )
-    .then((data) => {
+    .then((data: any) => {
       if (data) {
-        res.send(data);
+        ctx.body = data;
       } else {
-        res.json(boom.notFound('Income id not found'));
+        ctx.throw('Income id not found');
       }
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
 export default {

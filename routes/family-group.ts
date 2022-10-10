@@ -1,33 +1,17 @@
-import promiseRouter from 'express-promise-router';
-import { body, param } from 'express-validator/check';
+import Router from 'koa-router';
 
-import auth from './auth';
 import familyGroupController from '@/controllers/family-group.controller';
 
-const router = promiseRouter();
+const router = new Router({
+  prefix: '/users',
+});
 
-//  @ts-ignore
 router
-  .route('/:userId/family-group')
-  .post(
-    [body('name').exists(), body('description').exists()],
-    auth.required,
-    familyGroupController.create
-  )
-  .get(auth.required, familyGroupController.get);
+  .post('/:userId/family-group', familyGroupController.create)
+  .get('/:userId/family-group', familyGroupController.get);
 
-//  @ts-ignore
 router
-  .route('/:userId/family-group/:familyId')
-  .put(
-    [param('familyId').isMongoId()],
-    auth.required,
-    familyGroupController.update
-  )
-  .delete(
-    [param('familyId').isMongoId()],
-    auth.required,
-    familyGroupController.remove
-  );
+  .put('/:userId/family-group/:familyId', familyGroupController.update)
+  .delete('/:userId/family-group/:familyId', familyGroupController.remove);
 
 export default router;

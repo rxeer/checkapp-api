@@ -1,6 +1,6 @@
-import morgan from 'morgan';
-import express from 'express';
+import Koa from 'koa';
+import logger from 'koa-pino-logger';
 
-export const configureLogger = (app: express.Application, options?: any) => {
-  app.use(morgan('common', options));
+export const configureLogger = (app: Koa) => {
+  app.use(logger());
 };

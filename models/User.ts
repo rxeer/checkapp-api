@@ -1,27 +1,36 @@
 import crypto from 'crypto';
 import config from 'config';
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import randtoken from 'rand-token';
 import uniqueValidator from 'mongoose-unique-validator';
 
 import { IUserInterface } from '@/@types/models';
 
-const { Schema } = mongoose;
-const userSchema = new Schema({
+const userSchema: Schema = new Schema({
+  //  @ts-ignore
   role: {
     type: String,
     default: 'USER',
   },
+  //  @ts-ignore
   hash: String,
+  //  @ts-ignore
   salt: String,
+  //  @ts-ignore
   firstName: { type: String },
+  //  @ts-ignore
   lastName: { type: String },
+  //  @ts-ignore
   currency: { type: String },
+  //  @ts-ignore
   avatar: { type: String },
+  //  @ts-ignore
   onboardCompleted: { type: Boolean, default: false },
+  //  @ts-ignore
+
   createdAt: { type: Date, default: Date.now },
-  email: { type: String, require: true, unique: 'This email is already used' },
+  email: { type: String, require: true, unique: true },
 });
 
 userSchema.methods = {
@@ -29,8 +38,11 @@ userSchema.methods = {
     if (config.has('auth.hash')) {
       const authJWTHash: string = config.get('auth.hash');
 
+      //  @ts-ignore
       this.salt = crypto.randomBytes(16).toString('hex');
+      //  @ts-ignore\
       this.hash = crypto
+        //  @ts-ignore
         .pbkdf2Sync(password, this.salt, 10000, 512, authJWTHash)
         .toString('hex');
     }
@@ -40,9 +52,12 @@ userSchema.methods = {
     if (config.has('auth.hash')) {
       const authJWTHash: string = config.get('auth.hash');
 
+      //  @ts-ignore
       const hash = crypto
+        //  @ts-ignore
         .pbkdf2Sync(password, this.salt, 10000, 512, authJWTHash)
         .toString('hex');
+      //  @ts-ignore
       return this.hash === hash;
     }
   },
@@ -84,5 +99,5 @@ userSchema.statics = {
   },
 };
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator, { message: 'This email is already used' });
 export default mongoose.model<IUserInterface>('User', userSchema);

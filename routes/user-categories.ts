@@ -1,34 +1,17 @@
-import promiseRouter from 'express-promise-router';
-import { body, param } from 'express-validator/check';
+import Router from 'koa-router';
 
-import auth from './auth';
 import userCategoriesController from '@/controllers/user-categories.controller';
 
-const router = promiseRouter();
+const router = new Router({
+  prefix: '/users',
+});
 
-//  @ts-ignore
 router
-  .route('/:userId/categories')
-  .post(
-    [body('name').exists(), body('description').isString().exists()],
-    auth.required,
-    userCategoriesController.create
-  )
-  //  @ts-ignore
-  .get(auth.required, userCategoriesController.get);
+  .post('/:userId/categories', userCategoriesController.create)
+  .get('/:userId/categories', userCategoriesController.get);
 
-//  @ts-ignore
 router
-  .route('/:userId/categories/:categoryId')
-  .put(
-    [param('categoryId').isMongoId()],
-    auth.required,
-    userCategoriesController.update
-  )
-  .delete(
-    [param('categoryId').isMongoId()],
-    auth.required,
-    userCategoriesController.remove
-  );
+  .put('/:userId/categories/:categoryId', userCategoriesController.update)
+  .delete('/:userId/categories/:categoryId', userCategoriesController.remove);
 
 export default router;

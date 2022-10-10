@@ -1,13 +1,11 @@
-import promiseRouter from 'express-promise-router';
+import Router from 'koa-router';
 
-import auth from './auth';
 import statisticsController from '@/controllers/statistics.controller';
 
-const router = promiseRouter();
+const router = new Router({
+  prefix: '/users',
+});
 
-router
-  .route('/statistic/income')
-  //  @ts-ignore
-  .get(auth.required, statisticsController.getIncome);
+router.get('/statistic/income', statisticsController.getIncome);
 
 export default router;

@@ -1,5 +1,4 @@
-import boom from 'boom';
-import { Response } from 'express';
+import { Context } from 'koa';
 
 import UserCategoryModel from '@/models/UserCategory';
 import {
@@ -8,69 +7,73 @@ import {
   IUserCategoryInterface,
 } from '@/@types/models/UserCategory';
 
-const get = (req: IUserCategoriesRequest, res: Response) => {
-  const userId = req.params.userId;
+const get = (ctx: Context) => {
+  const userId = ctx.params.userId;
 
   return UserCategoryModel.find({ userId })
     .sort({ created_at: 'desc' })
     .exec()
     .then((data: IUserCategoryInterface[]) => {
-      res.json(data);
+      ctx.body = data;
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const create = (req: IUserCategoriesRequest, res: Response) => {
-  const userId = req.params.userId;
+const create = (ctx: Context) => {
+  const userId = ctx.params.userId;
 
   return UserCategoryModel.create({
-    ...req.body,
+    ...ctx.request.body,
     userId,
   })
     .then((data: IUserCategoryInterface) => {
-      return res.send(data);
+      ctx.body = data;
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const remove = (req: IUserCategoriesRequest, res: Response) => {
-  return UserCategoryModel.findOne({ _id: req.params.categoryId })
-    .then((data) => {
+const remove = (ctx: Context) => {
+  const categoryId = ctx.params.categoryId;
+
+  return UserCategoryModel.findOne({ _id: categoryId })
+    .then((data: any) => {
       return UserCategoryModel.findOneAndUpdate(
-        { _id: req.params.categoryId },
+        { _id: categoryId },
         //  @ts-ignore
         { $set: new IUserCategoryDto({ ...data._doc, active: false }) },
         { new: true }
       )
-        .then((category) => {
+        .then((category: any) => {
           if (category) {
-            res.send({ id: req.params.categoryId });
+            ctx.body = { id: categoryId };
           } else {
-            res.json(boom.notFound('Category not found'));
+            ctx.throw('Category not found');
           }
         })
-        .catch((err) => res.json(boom.notFound(err)));
+        .catch((err: Error) => ctx.throw(err));
     })
-    .catch((err) => res.json(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
-const update = (req: IUserCategoriesRequest, res: Response) => {
-  const userId = req.params.userId;
+const update = (ctx: Context) => {
+  const userId = ctx.params.userId;
+  const categoryId = ctx.params.categoryId;
 
   return UserCategoryModel.findOneAndUpdate(
-    { _id: req.params.categoryId },
-    { $set: { ...req.body, userId, active: true } },
+    { _id: categoryId },
+    { $set: { ...ctx.request.body, userId, active: true } },
     { new: true }
   )
 
-    .then((data) => {
+    .then((data: any) => {
       if (data) {
-        res.send(data);
+        ctx.body = data;
       } else {
-        res.json(boom.notFound('Category not found'));
+        ctx.status = 404;
+        ctx.throw('Category not found');
       }
     })
-    .catch((err) => res.send(boom.notFound(err)));
+    .catch((err: Error) => ctx.throw(err));
 };
 
 export default {

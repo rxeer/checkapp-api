@@ -2,7 +2,7 @@
   "port": 3003,
   "database": {
     "config": {
-      "host": "mongodb://admin:lKhhBN3EsA5vUKv3@cluster0-shard-00-00-jg5mh.azure.mongodb.net:27017,cluster0-shard-00-01-jg5mh.azure.mongodb.net:27017,cluster0-shard-00-02-jg5mh.azure.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"
+      "host": "mongodb+srv://root:j3qQiPmusJhxIFQM@cluster0.fgu402q.mongodb.net/?retryWrites=true&w=majority"
     }
   },
   "auth": {
@@ -10,5 +10,5 @@
     "secret": "693F197D312F1A9AF83396E2F98292F65BF221F2950B1F3AC5DEB852C756625B",
     "alg": "HS256"
   },
-  "avatar": "https://firebasestorage.googleapis.com/v0/b/icheck-ce8b6.appspot.com/o/Mask%20Group.png?alt=media&token=c79ddad1-fcfa-4a17-a910-49a4f478eabf"
+  "avatar": "https://firebasestorage.googleapis.com/v0/b/musicord-f8fe8.appspot.com/o/users_avatar%2F150-1.jpeg?alt=media&token=f88f7b55-ac45-49bb-8dc6-4d22d778a1e7"
 }
